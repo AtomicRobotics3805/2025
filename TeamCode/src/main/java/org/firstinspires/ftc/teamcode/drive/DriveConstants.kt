@@ -11,7 +11,7 @@ import com.acmerobotics.roadrunner.control.PIDCoefficients
 import com.noahbres.meepmeep.core.toRadians
 
 @Config
-class DriveConstants: MecanumDriveConstants{
+object DriveConstants: MecanumDriveConstants{
 
     @JvmField
     var _DRIFT_MULTIPLIER = 1.0

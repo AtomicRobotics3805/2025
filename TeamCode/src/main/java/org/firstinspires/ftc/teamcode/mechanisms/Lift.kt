@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.mechanisms
 import com.acmerobotics.dashboard.config.Config
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.rowanmcalpin.nextftc.command.Command
-import com.rowanmcalpin.nextftc.command.groups.SequentialCommandGroup
 import com.rowanmcalpin.nextftc.hardware.MotorEx
 import com.rowanmcalpin.nextftc.subsystems.MotorToPosition
 import com.rowanmcalpin.nextftc.subsystems.Subsystem
@@ -18,11 +17,11 @@ object Lift: Subsystem {
     var motorDirection = DcMotorSimple.Direction.FORWARD
 
     @JvmField
-    var low = 0.0 // Inches
+    var lowPos = 0.0 // Inches // NOT DONE
     @JvmField
-    var middle = 5.0 // Inches
+    var middlePos = 5.0 // Inches // NOT DONE
     @JvmField
-    var high = 10.0 // Inches
+    var highPos = 10.0 // Inches // NOT DONE
 
     @JvmField
     var maxSpeed = 1.0
@@ -35,9 +34,9 @@ object Lift: Subsystem {
     val countsPerInch = motor.ticksPerRev * gearReduction / (2 * pulleyRadius * Math.PI)
 
     val toLow: Command
-        get() = MotorToPosition(motor, (low * countsPerInch).toInt(), maxSpeed, listOf(this@Lift), kP = 0.003)
+        get() = MotorToPosition(motor, (lowPos * countsPerInch).toInt(), maxSpeed, listOf(this@Lift), kP = 0.003)
     val toMiddle: Command
-        get() = MotorToPosition(motor, (middle * countsPerInch).toInt(), maxSpeed, listOf(this@Lift), kP = 0.003)
+        get() = MotorToPosition(motor, (middlePos * countsPerInch).toInt(), maxSpeed, listOf(this@Lift), kP = 0.003)
     val toHigh: Command
-        get() = MotorToPosition(motor, (high * countsPerInch).toInt(), maxSpeed, listOf(this@Lift), kP = 0.003)
+        get() = MotorToPosition(motor, (highPos * countsPerInch).toInt(), maxSpeed, listOf(this@Lift), kP = 0.003)
 }

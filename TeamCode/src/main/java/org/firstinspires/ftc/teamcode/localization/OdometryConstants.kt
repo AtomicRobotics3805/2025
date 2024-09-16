@@ -4,7 +4,7 @@ import com.acmerobotics.dashboard.config.Config
 import com.rowanmcalpin.nextftc.driving.localizers.TwoWheelOdometryConstants
 
 @Config
-class OdometryConstants: TwoWheelOdometryConstants {
+object OdometryConstants: TwoWheelOdometryConstants {
     @JvmField
     var _PARALLEL_X = -1.0766 // Inches, forward offset of the wheel
     @JvmField
