@@ -17,7 +17,7 @@ object Intake: Subsystem { // NOT DONE
     @JvmField
     var name2 = "intake2"
     @JvmField
-    var speed = 1.0
+    var speed = -1.0
 
     val servo: CRServoEx = CRServoEx(name)
     val servo2: CRServoEx = CRServoEx(name2, CRServoEx.Direction.REVERSE)
@@ -37,4 +37,9 @@ object Intake: Subsystem { // NOT DONE
             PowerServo(servo, -speed, listOf(this@Intake)),
             PowerServo(servo2, -speed)
         )
+
+    override fun initialize() {
+        servo.initialize()
+        servo2.initialize()
+    }
 }

@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.mechanisms.Intake
 import org.firstinspires.ftc.teamcode.mechanisms.IntakeExtension
 import org.firstinspires.ftc.teamcode.mechanisms.Lift
 
-class Routines {
+object Routines {
     val autonomousInitializationRoutine: Command
         get() = SequentialCommandGroup(
 

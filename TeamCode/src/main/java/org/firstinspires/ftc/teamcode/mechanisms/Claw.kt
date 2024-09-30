@@ -14,12 +14,16 @@ object Claw: Subsystem {
     val clawServo = ServoEx(name)
 
     @JvmField
-    var openPos = 0.3 // NOT DONE
+    var openPos = 0.2
     @JvmField
-    var closedPos = 0.0 // NOT DONE
+    var closedPos = 0.35
 
     val clawOpen: Command
         get() = MoveServo(clawServo, openPos, 1.0, listOf(this@Claw))
     val clawClosed: Command
         get() = MoveServo(clawServo, closedPos, 1.0, listOf(this@Claw))
+
+    override fun initialize() {
+        clawServo.initialize()
+    }
 }
