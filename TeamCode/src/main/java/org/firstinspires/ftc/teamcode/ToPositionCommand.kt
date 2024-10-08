@@ -15,23 +15,16 @@ class ToPositionCommand(val motor: DcMotor, val target: Int, val ff: Double = 0.
         get() = requirementList
 
     override val _isDone: Boolean
-        get() = abs(error)<tolerance
+        get() = (target - motor.currentPosition) < tolerance
 
     var power: Double = 0.0
     var error: Int = 0
     var direction: Double = 0.0
 
     override fun onStart() {
-        motor.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
-        error = target - motor.currentPosition
+//        motor.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
         motor.targetPosition = target
-    }
-
-    override fun onExecute() {
-        error = target - motor.currentPosition
-        direction = sign(error.toDouble())
-        power = 0.003 * abs(error) * direction
-        telemetryData.add(Pair("Error", error));
-        motor.power = Range.clip(power, -1.0, 1.0)
+        motor.power = 1.0
+        motor.mode = DcMotor.RunMode.RUN_TO_POSITION
     }
 }

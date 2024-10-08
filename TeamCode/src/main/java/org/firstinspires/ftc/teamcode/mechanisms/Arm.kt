@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.mechanisms
 
 import com.acmerobotics.dashboard.config.Config
 import com.rowanmcalpin.nextftc.command.Command
+import com.rowanmcalpin.nextftc.command.groups.ParallelCommandGroup
 import com.rowanmcalpin.nextftc.command.groups.SequentialCommandGroup
 import com.rowanmcalpin.nextftc.hardware.ServoEx
 import com.rowanmcalpin.nextftc.subsystems.MoveServo
@@ -11,7 +12,10 @@ import com.rowanmcalpin.nextftc.subsystems.Subsystem
 object Arm: Subsystem {
     @JvmField
     var name = "arm"
+    @JvmField
+    var name2 = "arm2"
     val armServo = ServoEx(name)
+    val armServoLeft = ServoEx(name)
 
     @JvmField
     var intakePos = 0.9
@@ -22,19 +26,23 @@ object Arm: Subsystem {
 
 
     val toIntakePos: Command
-        get() = SequentialCommandGroup(
-            MoveServo(armServo, intakePos, 1.0)
+        get() = ParallelCommandGroup(
+            MoveServo(armServo, intakePos, 1.0),
+            MoveServo(armServoLeft, 1.0 - intakePos, 1.0)
         )
     val toScorePos: Command
-        get() = SequentialCommandGroup(
-            MoveServo(armServo, scorePos, 1.0)
+        get() = ParallelCommandGroup(
+            MoveServo(armServo, scorePos, 1.0),
+            MoveServo(armServoLeft, 1.0 - scorePos, 1.0)
         )
     val toSamplePickupPos: Command
-        get() = SequentialCommandGroup(
-            MoveServo(armServo, samplePickupPos, 1.0)
+        get() = ParallelCommandGroup(
+            MoveServo(armServo, samplePickupPos, 1.0),
+            MoveServo(armServoLeft, 1.0 - samplePickupPos, 1.0)
         )
 
     override fun initialize() {
         armServo.initialize()
+        armServoLeft.initialize()
     }
 }

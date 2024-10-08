@@ -5,9 +5,11 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.rowanmcalpin.nextftc.command.Command
 import com.rowanmcalpin.nextftc.command.groups.SequentialCommandGroup
+import com.rowanmcalpin.nextftc.command.utility.CustomCommand
 import com.rowanmcalpin.nextftc.hardware.MotorEx
 import com.rowanmcalpin.nextftc.subsystems.MotorToPosition
 import com.rowanmcalpin.nextftc.subsystems.Subsystem
+import org.firstinspires.ftc.teamcode.ToPositionCommand
 
 @Config
 object IntakeExtension: Subsystem {
@@ -22,9 +24,9 @@ object IntakeExtension: Subsystem {
     var maxSpeed = 1.0
 
     @JvmField
-    var inPos = 2.0 // Inches // NOT DONE
+    var inPos = 0 // Inches // NOT DONE
     @JvmField
-    var outPos = 8.0 // Inches // NOT DONE
+    var outPos = 1200 // Inches // NOT DONE
 
     val motor = MotorEx(name, MotorEx.MotorType.GOBILDA_YELLOWJACKET, motorRatio, motorDirection)
 
@@ -33,13 +35,26 @@ object IntakeExtension: Subsystem {
     val countsPerInch = motor.ticksPerRev * gearReduction / (2 * pulleyRadius * Math.PI)
 
     val extensionIn: Command
-        get() = MotorToPosition(motor, (inPos * countsPerInch).toInt(), maxSpeed, listOf(this@IntakeExtension), kP = 0.003)
+        get() =
+//            CustomCommand({ inPos - motor.currentPosition < 50 }, _start = {
+//            motor.mode = DcMotor.RunMode.RUN_TO_POSITION
+//            motor.targetPosition = inPos
+//            motor.power = 0.2
+//        })
+            ToPositionCommand(motor.motor, (inPos * countsPerInch).toInt(), requirementList = listOf(this@IntakeExtension))
     val extensionOut: Command
-        get() = MotorToPosition(motor, (outPos * countsPerInch).toInt(), maxSpeed, listOf(this@IntakeExtension), kP = 0.003)
+        get() =
+    //        CustomCommand({ outPos - motor.currentPosition < 50 }, _start = {
+//            motor.mode = DcMotor.RunMode.RUN_TO_POSITION
+//            motor.targetPosition = outPos
+//            motor.power = 0.2
+//        })
+            ToPositionCommand(motor.motor, 1200, requirementList = listOf(this@IntakeExtension))
 
     override fun initialize() {
         motor.initialize()
         motor.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
-        motor.mode = DcMotor.RunMode.RUN_USING_ENCODER
+        motor.targetPosition = 0
+        motor.mode = DcMotor.RunMode.RUN_TO_POSITION
     }
 }

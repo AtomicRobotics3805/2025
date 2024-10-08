@@ -34,6 +34,7 @@ class TestingTeleOp: NextFTCOpMode(Arm, Claw, Intake, IntakeExtension, IntakePiv
         telemetryData.add(Pair("Lift position", Lift.motor1.currentPosition))
         telemetryData.add(Pair("Lift target", Lift.motor1.targetPosition))
         telemetryData.add(Pair("Lift power", Lift.motor1.power))
+        telemetryData.add(Pair("IntakeExtension", IntakeExtension.motor.currentPosition))
         updateOurTelemetry()
     }
 

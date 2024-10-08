@@ -16,7 +16,7 @@ object IntakePivot: Subsystem {
     @JvmField
     var upPos = 0.535
     @JvmField
-    var transferPos = 0.52
+    var transferPos = 0.527
 
     val intakePivotDown: Command
         get() = MoveServo(intakePivotServo, downPos, 1.0, listOf(this@IntakePivot))
