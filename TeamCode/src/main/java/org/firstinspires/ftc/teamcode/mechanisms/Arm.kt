@@ -15,7 +15,7 @@ object Arm: Subsystem {
     @JvmField
     var name2 = "arm2"
     val armServo = ServoEx(name)
-    val armServoLeft = ServoEx(name)
+    val armServoLeft = ServoEx(name2)
 
     @JvmField
     var intakePos = 0.9

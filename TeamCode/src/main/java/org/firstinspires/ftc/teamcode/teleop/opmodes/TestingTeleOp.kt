@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.teleop.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.rowanmcalpin.nextftc.Constants
-import com.rowanmcalpin.nextftc.command.utility.TelemetryCommand
 import com.rowanmcalpin.nextftc.controls.Controls
 import com.rowanmcalpin.nextftc.opmodes.NextFTCOpMode
 import org.firstinspires.ftc.teamcode.TestCommand
@@ -12,11 +11,10 @@ import org.firstinspires.ftc.teamcode.mechanisms.Intake
 import org.firstinspires.ftc.teamcode.mechanisms.IntakeExtension
 import org.firstinspires.ftc.teamcode.mechanisms.IntakePivot
 import org.firstinspires.ftc.teamcode.mechanisms.Lift
-import org.firstinspires.ftc.teamcode.teleop.TeleOpRoutines
 
 @TeleOp(name="Testing TeleOp")
 class TestingTeleOp: NextFTCOpMode(Arm, Claw, Intake, IntakeExtension, IntakePivot, Lift) {
-    override val controls: Controls = org.firstinspires.ftc.teamcode.teleop.Controls()
+    override val controls: Controls = org.firstinspires.ftc.teamcode.teleop.TestControls()
     override fun onInit() {
         Constants.opMode = this
 //        TeleOpRoutines.reset()

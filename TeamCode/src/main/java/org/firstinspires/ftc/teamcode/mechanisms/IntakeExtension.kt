@@ -49,7 +49,7 @@ object IntakeExtension: Subsystem {
 //            motor.targetPosition = outPos
 //            motor.power = 0.2
 //        })
-            ToPositionCommand(motor.motor, 1200, requirementList = listOf(this@IntakeExtension))
+            ToPositionCommand(motor.motor, outPos, requirementList = listOf(this@IntakeExtension))
 
     override fun initialize() {
         motor.initialize()
