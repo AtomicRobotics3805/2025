@@ -8,7 +8,7 @@ import com.rowanmcalpin.nextftc.driving.MecanumDriveConstants
 import com.rowanmcalpin.nextftc.hardware.MotorEx
 import com.rowanmcalpin.nextftc.roadrunner.AxisDirection
 import com.acmerobotics.roadrunner.control.PIDCoefficients
-import com.noahbres.meepmeep.core.toRadians
+import com.rowanmcalpin.nextftc.trajectories.toRadians
 
 @Config
 object DriveConstants: MecanumDriveConstants{
@@ -40,9 +40,9 @@ object DriveConstants: MecanumDriveConstants{
     @JvmField
     var _MAX_ACCEL = 40.0
     @JvmField
-    var _MAX_ANG_ACCEL = 120.0.toRadians()
+    var _MAX_ANG_ACCEL = 120.0.toRadians
     @JvmField
-    var _MAX_ANG_VEL = 180.0.toRadians()
+    var _MAX_ANG_VEL = 180.0.toRadians
     // Theoretical max velocity assuming no load on motors: 86.0846416947 in/sec.
     @JvmField
     var _MAX_VEL = 60.0

@@ -20,7 +20,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * @author AJ Foster
  * @version 2.0.0
  */
-@TeleOp(name = "DotStar Rainbow", group = "Examples")
+//@TeleOp(name = "DotStar Rainbow", group = "Examples")
 public class DotStarRainbow extends OpMode {
 
     /* LEDs: Use this line if you drive the LEDs using an I2C/SPI bridge. */

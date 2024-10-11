@@ -19,7 +19,7 @@ object IntakePivot: Subsystem {
     var transferPos = 0.527
 
     val intakePivotDown: Command
-        get() = MoveServo(intakePivotServo, downPos, 1.0, listOf(this@IntakePivot))
+        get() = MoveServo(intakePivotServo, downPos, 0.0, listOf(this@IntakePivot))
     val intakePivotUp: Command
         get() = MoveServo(intakePivotServo, upPos, 1.0, listOf(this@IntakePivot))
     val intakePivotTransfer: Command

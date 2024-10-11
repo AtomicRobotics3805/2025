@@ -10,6 +10,7 @@ import com.rowanmcalpin.nextftc.hardware.MotorEx
 import com.rowanmcalpin.nextftc.subsystems.MotorToPosition
 import com.rowanmcalpin.nextftc.subsystems.Subsystem
 import org.firstinspires.ftc.teamcode.ToPositionCommand
+import kotlin.math.abs
 
 @Config
 object IntakeExtension: Subsystem {
@@ -36,20 +37,20 @@ object IntakeExtension: Subsystem {
 
     val extensionIn: Command
         get() =
-//            CustomCommand({ inPos - motor.currentPosition < 50 }, _start = {
-//            motor.mode = DcMotor.RunMode.RUN_TO_POSITION
-//            motor.targetPosition = inPos
-//            motor.power = 0.2
-//        })
-            ToPositionCommand(motor.motor, (inPos * countsPerInch).toInt(), requirementList = listOf(this@IntakeExtension))
+            CustomCommand({ abs(inPos - motor.currentPosition) < 50 }, _start = {
+            motor.mode = DcMotor.RunMode.RUN_TO_POSITION
+            motor.targetPosition = inPos
+            motor.power = 0.8
+        })
+//            ToPositionCommand(motor.motor, (inPos * countsPerInch).toInt(), requirementList = listOf(this@IntakeExtension))
     val extensionOut: Command
         get() =
-    //        CustomCommand({ outPos - motor.currentPosition < 50 }, _start = {
-//            motor.mode = DcMotor.RunMode.RUN_TO_POSITION
-//            motor.targetPosition = outPos
-//            motor.power = 0.2
-//        })
-            ToPositionCommand(motor.motor, 1200, requirementList = listOf(this@IntakeExtension))
+            CustomCommand({ abs(outPos - motor.currentPosition) < 50 }, _start = {
+            motor.mode = DcMotor.RunMode.RUN_TO_POSITION
+            motor.targetPosition = outPos
+            motor.power = 0.8
+        })
+//            ToPositionCommand(motor.motor, 1200, requirementList = listOf(this@IntakeExtension))
 
     override fun initialize() {
         motor.initialize()
