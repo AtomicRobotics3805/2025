@@ -5,9 +5,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.rowanmcalpin.nextftc.Constants
-import com.rowanmcalpin.nextftc.Constants.drive
-import com.rowanmcalpin.nextftc.command.CommandScheduler
-import com.rowanmcalpin.nextftc.command.utility.TelemetryCommand
 import com.rowanmcalpin.nextftc.controls.Controls
 import com.rowanmcalpin.nextftc.driving.drivers.MecanumDrive
 import com.rowanmcalpin.nextftc.driving.localizers.TwoWheelOdometryLocalizer
@@ -21,7 +18,6 @@ import org.firstinspires.ftc.teamcode.mechanisms.Intake
 import org.firstinspires.ftc.teamcode.mechanisms.IntakeExtension
 import org.firstinspires.ftc.teamcode.mechanisms.IntakePivot
 import org.firstinspires.ftc.teamcode.mechanisms.Lift
-import org.firstinspires.ftc.teamcode.teleop.TeleOpRoutines
 
 @TeleOp(name="Testing TeleOp")
 class TestingTeleOp: NextFTCOpMode(Arm, Claw, Intake, IntakeExtension, IntakePivot, Lift) {

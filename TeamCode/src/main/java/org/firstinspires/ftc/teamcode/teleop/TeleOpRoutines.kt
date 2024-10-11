@@ -45,6 +45,20 @@ object TeleOpRoutines {
             )
         )
 
+    val sampleToScore: Command
+        get() = SequentialCommandGroup(
+            Claw.clawClosed,
+            Lift.toMiddle,
+            Arm.toScorePos
+        )
+
+    val scoreToSample: Command
+        get() = SequentialCommandGroup(
+            Claw.clawOpen,
+            Arm.toSamplePickupPos,
+            Lift.toSample
+        )
+
     val reset: Command
         get() = SequentialCommandGroup(
             ParallelCommandGroup(

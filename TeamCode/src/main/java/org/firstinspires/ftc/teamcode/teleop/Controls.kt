@@ -26,8 +26,4 @@ class Controls: Controls() {
         gamepad1.x.pressedCommand = { Intake.start }
         gamepad1.y.pressedCommand = { Intake.stop }
     }
-
-    private fun handleDriving() {
-
-    }
 }

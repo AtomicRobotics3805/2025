@@ -44,8 +44,7 @@ object IntakeExtension: Subsystem {
         })
 //            ToPositionCommand(motor.motor, (inPos * countsPerInch).toInt(), requirementList = listOf(this@IntakeExtension))
     val extensionOut: Command
-        get() =
-            CustomCommand({ abs(outPos - motor.currentPosition) < 50 }, _start = {
+        get() = CustomCommand({ abs(outPos - motor.currentPosition) < 50 }, _start = {
             motor.mode = DcMotor.RunMode.RUN_TO_POSITION
             motor.targetPosition = outPos
             motor.power = 0.8

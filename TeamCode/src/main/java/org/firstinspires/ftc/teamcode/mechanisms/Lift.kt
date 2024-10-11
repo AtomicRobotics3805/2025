@@ -33,6 +33,8 @@ object Lift: Subsystem {
     @JvmField
     var highPos = 2850
 
+    var samplePos = 0.5 // Inches // NOT DONE
+
     @JvmField
     var maxSpeed = 1.0
 
@@ -70,13 +72,22 @@ object Lift: Subsystem {
             motor1.mode = DcMotor.RunMode.RUN_TO_POSITION
 //            motor2.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
             motor1.power = 1.0
-        }, _execute = {
-//            motor2.power = motor1.power
         })
+    val toSample: Command
+        get() = ParallelCommandGroup(
+            ToPositionCommand(motor1.motor, (samplePos * countsPerInch).toInt(), requirementList = listOf(this@Lift)),
+            PowerMotor(motor2, 0.0, DcMotor.RunMode.RUN_WITHOUT_ENCODER)
+        )
     val up: Command
         get() = ParallelCommandGroup(
             PowerMotor(motor1, 0.8, DcMotor.RunMode.RUN_WITHOUT_ENCODER, listOf(this@Lift)),
             PowerMotor(motor2, 0.8, DcMotor.RunMode.RUN_WITHOUT_ENCODER)
+        )
+
+    val down: Command
+        get() = ParallelCommandGroup(
+            PowerMotor(motor1, -0.8, DcMotor.RunMode.RUN_WITHOUT_ENCODER, listOf(this@Lift)),
+            PowerMotor(motor2, -0.8, DcMotor.RunMode.RUN_WITHOUT_ENCODER)
         )
     val stop: Command
         get() = ParallelCommandGroup(
