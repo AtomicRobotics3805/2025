@@ -24,17 +24,17 @@ object Intake: Subsystem { // NOT DONE
 
     val start: Command
         get() = ParallelCommandGroup(
-            PowerServo(servo, speed, listOf(this@Intake)),
+            PowerServo(servo, speed),
             PowerServo(servo2, speed)
         )
     val stop: Command
         get() = ParallelCommandGroup(
-            PowerServo(servo, 0.0, listOf(this@Intake)),
+            PowerServo(servo, 0.0),
             PowerServo(servo2, 0.0)
         )
     val reverse: Command
         get() = ParallelCommandGroup(
-            PowerServo(servo, -speed, listOf(this@Intake)),
+            PowerServo(servo, -speed),
             PowerServo(servo2, -speed)
         )
 

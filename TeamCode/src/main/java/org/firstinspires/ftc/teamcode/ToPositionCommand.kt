@@ -17,6 +17,7 @@ class ToPositionCommand(val motor: DcMotor, val target: Int, val ff: Double = 0.
     override val _isDone: Boolean
         get() = (target - motor.currentPosition) < tolerance
 
+
     var power: Double = 0.0
     var error: Int = 0
     var direction: Double = 0.0

@@ -14,7 +14,7 @@ object Claw: Subsystem {
     val clawServo = ServoEx(name)
 
     @JvmField
-    var openPos = 0.2
+    var openPos = 0.15
     @JvmField
     var closedPos = 0.35
 

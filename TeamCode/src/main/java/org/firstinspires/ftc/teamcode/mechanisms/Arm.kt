@@ -17,28 +17,21 @@ object Arm: Subsystem {
     val armServo = ServoEx(name)
 
     @JvmField
-    var intakePos = 0.9
+    var intakePos = 0.027
     @JvmField
-    var scorePos = 0.25
+    var scorePos = 0.647
     @JvmField
-    var samplePickupPos = 0.0
+    var samplePickupPos = 0.908
 
 
     val toIntakePos: Command
-        get() = ParallelCommandGroup(
-            MoveServo(armServo, intakePos, 1.0),
+        get() = MoveServo(armServo, intakePos, 0.5, listOf(this@Arm))
 //            MoveServo(armServoLeft, 1.0 - intakePos, 1.0)
-        )
+
     val toScorePos: Command
-        get() = ParallelCommandGroup(
-            MoveServo(armServo, scorePos, 1.0),
-//            MoveServo(armServoLeft, 1.0 - scorePos, 1.0)
-        )
+        get() = MoveServo(armServo, scorePos, 0.5, listOf(this@Arm))
     val toSamplePickupPos: Command
-        get() = ParallelCommandGroup(
-            MoveServo(armServo, samplePickupPos, 1.0),
-//            MoveServo(armServoLeft, 1.0 - samplePickupPos, 1.0)
-        )
+        get() = MoveServo(armServo, samplePickupPos, 1.0, listOf(this@Arm))
 
     override fun initialize() {
         armServo.initialize()

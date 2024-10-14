@@ -1,35 +1,59 @@
 package org.firstinspires.ftc.teamcode.mechanisms
 
+import android.graphics.Color
 import com.qualcomm.hardware.rev.RevColorSensorV3
+import com.qualcomm.robotcore.util.ElapsedTime
+import com.rowanmcalpin.nextftc.Constants
+import com.rowanmcalpin.nextftc.command.Command
 import com.rowanmcalpin.nextftc.subsystems.Subsystem
-import org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
+import org.firstinspires.ftc.teamcode.teleop.opmodes.TestingTeleOp
 
 
 object IntakeSensor: Subsystem {
 
-    val sensor = hardwareMap.get(RevColorSensorV3::class.java, "sensor")
+    lateinit var sensor: RevColorSensorV3
 
-    var selection = 0
+    var selection = 0 // 1 red, 2 blue, 3 yellow, 0 atomic green, 4 off
 
+    var hsv: FloatArray = FloatArray(3);
 
+    class DetectColor(): Command() {
+        override var _isDone = false
 
+        private val timer: ElapsedTime = ElapsedTime()
+        private var lastTimestamp = 0.0
+        private val checkFrequency = 0.5
 
-    fun detectColor(): Int {
-
-
-        selection = if (sensor.getDistance(DistanceUnit.CM) < 5) {
-            // Update each pixel in the strip.
-            if (sensor.green() > sensor.red() && sensor.red() > sensor.blue()) {
-                3
-            } else if (sensor.red() > sensor.blue() && sensor.green() < sensor.red()) {
-                1
-            } else {
-                2
-            }
-        } else {
-            0
+        override fun onStart() {
+            timer.reset()
         }
-        return selection
+
+        override fun onExecute() {
+            if (timer.seconds() - lastTimestamp >= checkFrequency) {
+                Color.colorToHSV(sensor.normalizedColors.toColor(), hsv)
+                selection = if (sensor.getDistance(DistanceUnit.CM) < 2) {
+                    if (hsv[0] <= 26) {
+                        1
+                    } else if (hsv[0] <= 85) {
+                        3
+                    } else {
+                        2
+                    }
+                } else {
+                    if (Constants.opMode.isStopRequested) {
+                        4
+                    } else {
+                        0
+                    }
+                }
+                lastTimestamp = timer.seconds()
+            }
+            TestingTeleOp.telemetryData.add(Pair("Detected color", hsv.contentToString()))
+        }
+    }
+
+    override fun initialize() {
+        sensor = Constants.opMode.hardwareMap.get(RevColorSensorV3::class.java, "intake_sensor")
     }
 }

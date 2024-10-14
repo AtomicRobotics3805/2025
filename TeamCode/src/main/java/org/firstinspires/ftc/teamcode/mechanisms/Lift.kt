@@ -4,14 +4,11 @@ import com.acmerobotics.dashboard.config.Config
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.rowanmcalpin.nextftc.command.Command
-import com.rowanmcalpin.nextftc.command.groups.ParallelCommandGroup
-import com.rowanmcalpin.nextftc.command.utility.CustomCommand
 import com.rowanmcalpin.nextftc.hardware.MotorEx
 import com.rowanmcalpin.nextftc.hardware.MotorExGroup
 import com.rowanmcalpin.nextftc.subsystems.MotorToPosition
 import com.rowanmcalpin.nextftc.subsystems.PowerMotor
 import com.rowanmcalpin.nextftc.subsystems.Subsystem
-import org.firstinspires.ftc.teamcode.ToPositionCommand
 
 @Config
 object Lift: Subsystem {
@@ -27,13 +24,15 @@ object Lift: Subsystem {
     var motor2Direction = DcMotorSimple.Direction.FORWARD
 
     @JvmField
-    var lowPos = 0 // Inches // NOT DONE
+    var lowPos = 0
     @JvmField
-    var middlePos = 1400
+    var specimenPickup = 300 // TODO
     @JvmField
     var highPos = 2850
-
-    var samplePos = 0.5 // Inches // NOT DONE
+    @JvmField
+    var aLittleHighPos = 300
+    @JvmField
+    var specimenScoreHigh = 1800 // TODO
 
     @JvmField
     var maxSpeed = 1.0
@@ -42,58 +41,33 @@ object Lift: Subsystem {
     var motor1 = MotorEx(name, MotorEx.MotorType.GOBILDA_YELLOWJACKET, motorRatio, motorDirection)
     var motor2 = MotorEx(name2, MotorEx.MotorType.GOBILDA_YELLOWJACKET, motorRatio, motor2Direction)
 
+    var motorGroup = MotorExGroup(motor1, motor2)
+
 
     val pulleyRadius = 0.5 // Inches
     val gearReduction = 1.0
     val countsPerInch = motor1.ticksPerRev * gearReduction / (2 * pulleyRadius * Math.PI)
 
+    val aLittleHigh: Command
+        get() = MotorToPosition(motorGroup, aLittleHighPos, 1.0, listOf(this@Lift))
     val toLow: Command
-        get() = CustomCommand({ false }, _start = {
-            motor1.targetPosition = lowPos
-            motor1.mode = DcMotor.RunMode.RUN_TO_POSITION
-//            motor2.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
-            motor1.power = 1.0
-
-        }, _execute = {
-//            motor2.power = motor1.power
-        })
-    val toMiddle: Command
-        get() = CustomCommand({ false }, _start = {
-            motor1.targetPosition = middlePos
-            motor1.mode = DcMotor.RunMode.RUN_TO_POSITION
-//            motor2.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
-            motor1.power = 1.0
-        }, _execute = {
-//            motor2.power = motor1.power
-        })
+        get() = MotorToPosition(motorGroup, lowPos, 1.0, listOf(this@Lift))
+    val toSamplePickup: Command
+        get() = MotorToPosition(motorGroup, specimenPickup, 1.0, listOf(this@Lift))
+    val toSampleScoreHigh: Command
+        get() = MotorToPosition(motorGroup, specimenScoreHigh, 1.0, listOf(this@Lift))
     val toHigh: Command
-        get() = CustomCommand({ false }, _start = {
-            motor1.targetPosition = highPos
-            motor1.mode = DcMotor.RunMode.RUN_TO_POSITION
-//            motor2.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
-            motor1.power = 1.0
-        })
-    val toSample: Command
-        get() = ParallelCommandGroup(
-            ToPositionCommand(motor1.motor, (samplePos * countsPerInch).toInt(), requirementList = listOf(this@Lift)),
-            PowerMotor(motor2, 0.0, DcMotor.RunMode.RUN_WITHOUT_ENCODER)
-        )
+        get() = MotorToPosition(motorGroup, highPos, 1.0, listOf(this@Lift))
+
+
     val up: Command
-        get() = ParallelCommandGroup(
-            PowerMotor(motor1, 0.8, DcMotor.RunMode.RUN_WITHOUT_ENCODER, listOf(this@Lift)),
-            PowerMotor(motor2, 0.8, DcMotor.RunMode.RUN_WITHOUT_ENCODER)
-        )
+        get() = PowerMotor(motorGroup, 0.8, DcMotor.RunMode.RUN_WITHOUT_ENCODER, listOf(this@Lift))
 
     val down: Command
-        get() = ParallelCommandGroup(
-            PowerMotor(motor1, -0.8, DcMotor.RunMode.RUN_WITHOUT_ENCODER, listOf(this@Lift)),
-            PowerMotor(motor2, -0.8, DcMotor.RunMode.RUN_WITHOUT_ENCODER)
-        )
+        get() = PowerMotor(motorGroup, -0.8, DcMotor.RunMode.RUN_WITHOUT_ENCODER, listOf(this@Lift))
     val stop: Command
-        get() = ParallelCommandGroup(
-            PowerMotor(motor1, 0.0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, listOf(this@Lift)),
-            PowerMotor(motor2, 0.0, DcMotor.RunMode.RUN_WITHOUT_ENCODER)
-        )
+        get() = PowerMotor(motorGroup, 0.0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, listOf(this@Lift))
+
 
     override fun initialize() {
         motor1.initialize()

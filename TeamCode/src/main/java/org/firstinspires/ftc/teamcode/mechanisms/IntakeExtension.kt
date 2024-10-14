@@ -25,9 +25,9 @@ object IntakeExtension: Subsystem {
     var maxSpeed = 1.0
 
     @JvmField
-    var inPos = 0 // Inches // NOT DONE
+    var inPos = 0
     @JvmField
-    var outPos = 1200 // Inches // NOT DONE
+    var outPos = 1400 // TODO
 
     val motor = MotorEx(name, MotorEx.MotorType.GOBILDA_YELLOWJACKET, motorRatio, motorDirection)
 
@@ -36,20 +36,9 @@ object IntakeExtension: Subsystem {
     val countsPerInch = motor.ticksPerRev * gearReduction / (2 * pulleyRadius * Math.PI)
 
     val extensionIn: Command
-        get() =
-            CustomCommand({ abs(inPos - motor.currentPosition) < 50 }, _start = {
-            motor.mode = DcMotor.RunMode.RUN_TO_POSITION
-            motor.targetPosition = inPos
-            motor.power = 0.8
-        })
-//            ToPositionCommand(motor.motor, (inPos * countsPerInch).toInt(), requirementList = listOf(this@IntakeExtension))
+        get() = MotorToPosition(motor, inPos, 1.0, listOf(this@IntakeExtension))
     val extensionOut: Command
-        get() = CustomCommand({ abs(outPos - motor.currentPosition) < 50 }, _start = {
-            motor.mode = DcMotor.RunMode.RUN_TO_POSITION
-            motor.targetPosition = outPos
-            motor.power = 0.8
-        })
-//            ToPositionCommand(motor.motor, 1200, requirementList = listOf(this@IntakeExtension))
+        get() = MotorToPosition(motor, 1200, 1.0, listOf(this@IntakeExtension))
 
     override fun initialize() {
         motor.initialize()

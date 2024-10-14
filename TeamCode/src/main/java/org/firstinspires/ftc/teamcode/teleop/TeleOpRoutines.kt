@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.teleop
 import com.rowanmcalpin.nextftc.command.Command
 import com.rowanmcalpin.nextftc.command.groups.ParallelCommandGroup
 import com.rowanmcalpin.nextftc.command.groups.SequentialCommandGroup
+import com.rowanmcalpin.nextftc.command.utility.Delay
 import org.firstinspires.ftc.teamcode.mechanisms.Arm
 import org.firstinspires.ftc.teamcode.mechanisms.Claw
 import org.firstinspires.ftc.teamcode.mechanisms.Intake
@@ -22,18 +23,22 @@ object TeleOpRoutines {
         get() = SequentialCommandGroup(
             ParallelCommandGroup(
                 Intake.stop,
-                IntakePivot.intakePivotUp
+                IntakePivot.intakePivotUp,
+                Lift.aLittleHigh,
+                Claw.clawOpen,
+                Arm.toIntakePos
             ),
-            ParallelCommandGroup(
-                IntakeExtension.extensionIn,
-                IntakePivot.intakePivotTransfer
-            ),
-            Claw.clawClosed,
-            ParallelCommandGroup(
-                Arm.toScorePos,
-                Lift.toHigh,
-                IntakePivot.intakePivotUp
-            )
+            IntakeExtension.extensionIn,
+            IntakePivot.intakePivotTransfer,
+            Lift.toLow,
+            Claw.clawClosed
+        )
+
+    val liftUp: Command
+        get() = ParallelCommandGroup(
+            Arm.toScorePos,
+            Lift.toHigh,
+            IntakePivot.intakePivotUp
         )
 
     val scoreToRepeat: Command
@@ -45,18 +50,22 @@ object TeleOpRoutines {
             )
         )
 
-    val sampleToScore: Command
+    val specimenPickupToScore: Command
         get() = SequentialCommandGroup(
             Claw.clawClosed,
-            Lift.toMiddle,
-            Arm.toScorePos
+            Lift.toSampleScoreHigh
         )
 
-    val scoreToSample: Command
+    val toSpecimenPickup: Command
         get() = SequentialCommandGroup(
-            Claw.clawOpen,
-            Arm.toSamplePickupPos,
-            Lift.toSample
+            ParallelCommandGroup(
+                SequentialCommandGroup(
+                    Delay(0.5),
+                    Claw.clawOpen,
+                ),
+                Lift.toSamplePickup
+            ),
+            Arm.toSamplePickupPos
         )
 
     val reset: Command
