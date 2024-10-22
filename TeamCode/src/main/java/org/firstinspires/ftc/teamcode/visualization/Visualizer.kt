@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.visualization
 
-import com.noahbres.meepmeep.MeepMeep
+import org.rowlandhall.meepmeep.MeepMeep
 import com.rowanmcalpin.nextftc.Constants
 import com.rowanmcalpin.nextftc.command.groups.SequentialCommandGroup
 import com.rowanmcalpin.nextftc.driving.drivers.MecanumDrive
@@ -16,19 +16,13 @@ fun main() {
             MecanumDrive(
                 DriveConstants,
                 TwoWheelOdometryLocalizer(OdometryConstants)
-            ) { tf.startPosLeft },
-            18.0,
+            ) { tf.startPosRight },
+            14.0,
             18.0,
             {
                 SequentialCommandGroup(
-                    Constants.drive.followTrajectory(tf.leftStartToBasketHighScore),
-                    Constants.drive.followTrajectory(tf.basketHighScoreToRightYellow),
-                    Constants.drive.followTrajectory(tf.rightYellowToBasketHighScore),
-                    Constants.drive.followTrajectory(tf.basketHighScoreToCenterYellow),
-                    Constants.drive.followTrajectory(tf.centerYellowToBasketHighScore),
-                    Constants.drive.followTrajectory(tf.basketHighScoreToLeftYellow),
-                    Constants.drive.followTrajectory(tf.leftYellowToBasketHighScore),
-                    Constants.drive.followTrajectory(tf.basketHighScoreToSubmersiblePark)
+                    Constants.drive.followTrajectory(tf.rightStartToHighChamber),
+                    Constants.drive.followTrajectory(tf.highChamberToZonePark)
                 )
             },
             Constants.Color.BLUE

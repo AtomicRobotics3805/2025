@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.rowanmcalpin.nextftc.command.Command
 import com.rowanmcalpin.nextftc.command.groups.SequentialCommandGroup
 import com.rowanmcalpin.nextftc.command.utility.CustomCommand
+import com.rowanmcalpin.nextftc.controls.GamepadEx
 import com.rowanmcalpin.nextftc.hardware.MotorEx
 import com.rowanmcalpin.nextftc.subsystems.MotorToPosition
 import com.rowanmcalpin.nextftc.subsystems.Subsystem
@@ -25,9 +26,11 @@ object IntakeExtension: Subsystem {
     var maxSpeed = 1.0
 
     @JvmField
-    var inPos = 0
+    var inPos = 50
     @JvmField
-    var outPos = 1400 // TODO
+    var outPos = 1200 // TODO
+    @JvmField
+    var slightlyOutPos = 300 // TODO
 
     val motor = MotorEx(name, MotorEx.MotorType.GOBILDA_YELLOWJACKET, motorRatio, motorDirection)
 
@@ -38,7 +41,22 @@ object IntakeExtension: Subsystem {
     val extensionIn: Command
         get() = MotorToPosition(motor, inPos, 1.0, listOf(this@IntakeExtension))
     val extensionOut: Command
-        get() = MotorToPosition(motor, 1200, 1.0, listOf(this@IntakeExtension))
+        get() = MotorToPosition(motor, outPos, 1.0, listOf(this@IntakeExtension))
+    val extensionSlightlyOut: Command
+        get() = MotorToPosition(motor, slightlyOutPos, 1.0, listOf(this@IntakeExtension))
+
+    val resetEncoder: Command
+        get() = CustomCommand(getDone = { true }, _start = {
+            setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER)
+        })
+
+    fun manual(speed: Double) {
+        motor.power = speed
+    }
+
+    fun setRunMode(mode: DcMotor.RunMode) {
+        motor.mode = mode
+    }
 
     override fun initialize() {
         motor.initialize()

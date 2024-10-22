@@ -4,7 +4,9 @@ import com.rowanmcalpin.nextftc.Constants
 import com.rowanmcalpin.nextftc.controls.Controls
 import com.rowanmcalpin.nextftc.driving.DriverControlled
 import org.firstinspires.ftc.teamcode.drive.DriveConstants
+import org.firstinspires.ftc.teamcode.mechanisms.Arm
 import org.firstinspires.ftc.teamcode.mechanisms.Intake
+import org.firstinspires.ftc.teamcode.mechanisms.IntakeExtension
 import org.firstinspires.ftc.teamcode.mechanisms.Lift
 
 class Controls: Controls() {
@@ -15,11 +17,20 @@ class Controls: Controls() {
             reverseTurn =  DriveConstants.REVERSE_TURN)
         dc()
 
+        gamepad2.leftStick.button.pressedCommand = { Lift.resetEncoder }
+
+
+        gamepad1.x.pressedCommand = { dc.resetRotation }
+
         gamepad1.a.pressedCommand = { TeleOpRoutines.outToIntake }
         gamepad1.rightTrigger.pressedCommand = { Intake.start }
         gamepad1.rightTrigger.releasedCommand = { Intake.stop }
         gamepad1.leftTrigger.pressedCommand = { Intake.reverse }
         gamepad1.leftTrigger.releasedCommand = { Intake.stop }
+
+        gamepad1.leftBumper.pressedCommand = { TeleOpRoutines.slightlyOutToIntake }
+
+        gamepad1.dpadDown.pressedCommand = { Arm.toAscentOnePos }
 
         gamepad2.a.pressedCommand = { TeleOpRoutines.outToIntake }
         gamepad2.b.pressedCommand = { TeleOpRoutines.inToTransfer }
@@ -30,10 +41,6 @@ class Controls: Controls() {
         gamepad1.rightBumper.pressedCommand = { Constants.drive.switchSpeed() }
         gamepad1.rightBumper.releasedCommand = { Constants.drive.switchSpeed() }
 
-        gamepad2.dpadUp.pressedCommand = { Lift.up }
-        gamepad2.dpadUp.releasedCommand = { Lift.stop }
-        gamepad2.dpadDown.pressedCommand = { Lift.down }
-        gamepad2.dpadDown.releasedCommand = { Lift.stop }
         /*
         gamepad1.a.pressedCommand = { TeleOpRoutines.outToIntake }
         gamepad1.b.pressedCommand = { TeleOpRoutines.inToTransfer }

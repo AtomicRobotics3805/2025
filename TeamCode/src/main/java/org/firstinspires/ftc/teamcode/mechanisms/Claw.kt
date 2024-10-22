@@ -18,9 +18,9 @@ object Claw: Subsystem {
     @JvmField
     var closedPos = 0.35
 
-    val clawOpen: Command
+    val open: Command
         get() = MoveServo(clawServo, openPos, 1.0, listOf(this@Claw))
-    val clawClosed: Command
+    val close: Command
         get() = MoveServo(clawServo, closedPos, 1.0, listOf(this@Claw))
 
     override fun initialize() {

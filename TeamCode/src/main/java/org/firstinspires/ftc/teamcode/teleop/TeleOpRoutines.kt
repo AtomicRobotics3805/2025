@@ -19,19 +19,29 @@ object TeleOpRoutines {
             Intake.start
         )
 
+    val slightlyOutToIntake: Command
+        get() = SequentialCommandGroup(
+            IntakeExtension.extensionSlightlyOut,
+            IntakePivot.intakePivotDown,
+            Intake.start
+        )
+
     val inToTransfer: Command
         get() = SequentialCommandGroup(
             ParallelCommandGroup(
                 Intake.stop,
                 IntakePivot.intakePivotUp,
                 Lift.aLittleHigh,
-                Claw.clawOpen,
-                Arm.toIntakePos
+                Claw.open,
+                SequentialCommandGroup(
+                    Delay(1.0),
+                    Arm.toIntakePos
+                )
             ),
             IntakeExtension.extensionIn,
             IntakePivot.intakePivotTransfer,
-            Lift.toLow,
-            Claw.clawClosed
+            Lift.toIntake,
+            Claw.close
         )
 
     val liftUp: Command
@@ -43,17 +53,17 @@ object TeleOpRoutines {
 
     val scoreToRepeat: Command
         get() = SequentialCommandGroup(
-            Claw.clawOpen,
+            Claw.open,
             ParallelCommandGroup(
                 Arm.toIntakePos,
-                Lift.toLow
+                Lift.toIntake
             )
         )
 
     val specimenPickupToScore: Command
         get() = SequentialCommandGroup(
-            Claw.clawClosed,
-            Lift.toSampleScoreHigh
+            Claw.close,
+            Lift.toSpecimenScoreHigh
         )
 
     val toSpecimenPickup: Command
@@ -61,11 +71,11 @@ object TeleOpRoutines {
             ParallelCommandGroup(
                 SequentialCommandGroup(
                     Delay(0.5),
-                    Claw.clawOpen,
+                    Claw.open,
                 ),
-                Lift.toSamplePickup
+                Lift.toSpecimenPickup
             ),
-            Arm.toSamplePickupPos
+            Arm.toSpecimenPickupPos
         )
 
     val reset: Command
@@ -73,9 +83,9 @@ object TeleOpRoutines {
             ParallelCommandGroup(
                 IntakePivot.intakePivotUp,
                 Arm.toIntakePos,
-                Claw.clawOpen
+                Claw.open
             ),
             IntakeExtension.extensionIn,
-            Lift.toLow
+            Lift.toIntake
         )
 }

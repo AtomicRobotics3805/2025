@@ -2,14 +2,13 @@ package org.firstinspires.ftc.teamcode.teleop.opmodes
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import com.qualcomm.robotcore.hardware.DcMotor
-import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.rowanmcalpin.nextftc.Constants
+import com.rowanmcalpin.nextftc.command.groups.SequentialCommandGroup
+import com.rowanmcalpin.nextftc.command.utility.Delay
 import com.rowanmcalpin.nextftc.controls.Controls
 import com.rowanmcalpin.nextftc.driving.drivers.MecanumDrive
 import com.rowanmcalpin.nextftc.driving.localizers.TwoWheelOdometryLocalizer
 import com.rowanmcalpin.nextftc.opmodes.NextFTCOpMode
-import org.firstinspires.ftc.teamcode.TestCommand
 import org.firstinspires.ftc.teamcode.drive.DriveConstants
 import org.firstinspires.ftc.teamcode.localization.OdometryConstants
 import org.firstinspires.ftc.teamcode.mechanisms.Arm
@@ -37,23 +36,14 @@ class TestingTeleOp: NextFTCOpMode(Arm, Claw, Intake, IntakeExtension, IntakePiv
         get() = Constants.Color.RED
 
     override fun onInit() {
-//        lf = Constants.opMode.hardwareMap.get(DcMotor::class.java, "LF")
-//        lf.direction = DcMotorSimple.Direction.REVERSE
-//        lf.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
-//        rf = Constants.opMode.hardwareMap.get(DcMotor::class.java, "RF")
-//        rf.direction = DcMotorSimple.Direction.FORWARD
-//        rf.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
-//        lb = Constants.opMode.hardwareMap.get(DcMotor::class.java, "LB")
-//        lb.direction = DcMotorSimple.Direction.REVERSE
-//        lb.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
-//        rb = Constants.opMode.hardwareMap.get(DcMotor::class.java, "RB")
-//        rb.direction = DcMotorSimple.Direction.FORWARD
-//        rb.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
         Constants.opMode = this
         IntakePivot.intakePivotUp()
         Arm.toIntakePos()
-        Claw.clawOpen()
-        Intake.start()
+        Claw.open()
+        SequentialCommandGroup(
+//            Intake.wakeUp,
+            Intake.start
+        )()
         Lights.DisplayColor()()
         IntakeSensor.DetectColor()()
         IntakeExtension.extensionIn()

@@ -4,9 +4,12 @@ import com.acmerobotics.dashboard.config.Config
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.rowanmcalpin.nextftc.command.Command
+import com.rowanmcalpin.nextftc.command.utility.CustomCommand
+import com.rowanmcalpin.nextftc.controls.GamepadEx
 import com.rowanmcalpin.nextftc.hardware.MotorEx
 import com.rowanmcalpin.nextftc.hardware.MotorExGroup
 import com.rowanmcalpin.nextftc.subsystems.MotorToPosition
+import com.rowanmcalpin.nextftc.subsystems.MotorToPositionDepowerOnEnd
 import com.rowanmcalpin.nextftc.subsystems.PowerMotor
 import com.rowanmcalpin.nextftc.subsystems.Subsystem
 
@@ -24,7 +27,7 @@ object Lift: Subsystem {
     var motor2Direction = DcMotorSimple.Direction.FORWARD
 
     @JvmField
-    var lowPos = 0
+    var intakePos = -5
     @JvmField
     var specimenPickup = 300 // TODO
     @JvmField
@@ -50,11 +53,11 @@ object Lift: Subsystem {
 
     val aLittleHigh: Command
         get() = MotorToPosition(motorGroup, aLittleHighPos, 1.0, listOf(this@Lift))
-    val toLow: Command
-        get() = MotorToPosition(motorGroup, lowPos, 1.0, listOf(this@Lift))
-    val toSamplePickup: Command
+    val toIntake: Command
+        get() = MotorToPositionDepowerOnEnd(motorGroup, intakePos, 1.0, listOf(this@Lift))
+    val toSpecimenPickup: Command
         get() = MotorToPosition(motorGroup, specimenPickup, 1.0, listOf(this@Lift))
-    val toSampleScoreHigh: Command
+    val toSpecimenScoreHigh: Command
         get() = MotorToPosition(motorGroup, specimenScoreHigh, 1.0, listOf(this@Lift))
     val toHigh: Command
         get() = MotorToPosition(motorGroup, highPos, 1.0, listOf(this@Lift))
@@ -68,6 +71,18 @@ object Lift: Subsystem {
     val stop: Command
         get() = PowerMotor(motorGroup, 0.0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, listOf(this@Lift))
 
+    val resetEncoder: Command
+        get() = CustomCommand(getDone = { true }, _start = {
+            setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER)
+        })
+
+    fun manual(speed: Double) {
+        motorGroup.power = speed
+    }
+
+    fun setRunMode(mode: DcMotor.RunMode) {
+        motorGroup.mode = mode
+    }
 
     override fun initialize() {
         motor1.initialize()

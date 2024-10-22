@@ -1,65 +1,72 @@
 package org.firstinspires.ftc.teamcode.autonomous.routines
 
+import com.rowanmcalpin.nextftc.Constants
 import com.rowanmcalpin.nextftc.command.Command
 import com.rowanmcalpin.nextftc.command.groups.ParallelCommandGroup
 import com.rowanmcalpin.nextftc.command.groups.SequentialCommandGroup
-import com.rowanmcalpin.nextftc.command.utility.CustomCommand
 import com.rowanmcalpin.nextftc.command.utility.Delay
+import org.firstinspires.ftc.teamcode.autonomous.trajectories.TrajectoryFactory
 import org.firstinspires.ftc.teamcode.mechanisms.Arm
 import org.firstinspires.ftc.teamcode.mechanisms.Claw
-import org.firstinspires.ftc.teamcode.mechanisms.Intake
 import org.firstinspires.ftc.teamcode.mechanisms.IntakeExtension
+import org.firstinspires.ftc.teamcode.mechanisms.IntakePivot
 import org.firstinspires.ftc.teamcode.mechanisms.Lift
 
 object Routines {
-    val autonomousInitializationRoutine: Command
-        get() = SequentialCommandGroup(
-
-        )
-
-    val neutralToIntake: Command
-        get() = SequentialCommandGroup(
-            // If active intake tilting, delay 0.5 seconds then tilt down
-            IntakeExtension.extensionOut
-        )
-
-    val intake: Command
-        get() = SequentialCommandGroup(
-            Intake.start,
-            // Start "intake sensor watch sequence" -- don't set isDone to true until item is intook
-            // Or delay for 1.5 seconds
-            Delay(1.5),
-            Intake.stop
-        )
-
-    val intakeToTransfer: Command
-        get() = SequentialCommandGroup(
-            ParallelCommandGroup(
-                // If active intake tilting, tilt up
-                IntakeExtension.extensionIn,
+    /**
+     * Initialization for all autonomous OpModes
+     */
+    val autonomousWithSampleInitializationRoutine: Command
+        get() = ParallelCommandGroup(
+            Arm.toIntakePos,
+            SequentialCommandGroup(
+                IntakePivot.intakePivotTransfer,
+                Claw.close
             ),
-            Intake.reverse,
-            Delay(1.0),
-            Intake.stop
+            Lift.toIntake,
+            IntakeExtension.extensionIn
         )
 
-    val transferToScoreHigh: Command
-        get() = SequentialCommandGroup(
-            Claw.clawClosed,
-            ParallelCommandGroup(
-                Arm.toScorePos,
-                Lift.toHigh
+    val autonomousWithSpecimenInitializationRoutine: Command
+        get() = ParallelCommandGroup(
+            SequentialCommandGroup(
+                IntakePivot.intakePivotTransfer,
+                Claw.close
             ),
-            Claw.clawOpen
+            Lift.toIntake,
+            IntakeExtension.extensionIn
         )
 
-    val scoreHighToNeutral: Command
+    /**
+     * Left-side start to high basket score
+     */
+    val leftStartToHighBasketScore: Command
+        get() = ParallelCommandGroup(
+            Constants.drive.followTrajectory(TrajectoryFactory.leftStartToHighBasket),
+            Lift.toHigh,
+            SequentialCommandGroup(
+                Delay(1.0),
+                Arm.toScorePos
+            )
+        )
+
+    /**
+     * Score to ascent pos
+     */
+    val highBasketScoreToAscent: Command
+        get() = ParallelCommandGroup(
+            Constants.drive.followTrajectory(TrajectoryFactory.highBasketToAscentPark),
+            Lift.toIntake,
+            Arm.toAscentOnePos
+        )
+
+    /**
+     * Full routine for single sample w/ ascent park
+     */
+    val singleSampleAscentPark: Command
         get() = SequentialCommandGroup(
-            Claw.clawClosed,
-            ParallelCommandGroup(
-                Arm.toIntakePos,
-                Lift.toLow
-            ),
-            Claw.clawOpen
+            leftStartToHighBasketScore,
+            Claw.open,
+            highBasketScoreToAscent
         )
 }
