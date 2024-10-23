@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.mechanisms
 import com.acmerobotics.dashboard.config.Config
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorSimple
+import com.qualcomm.robotcore.util.Range
+import com.qualcomm.robotcore.util.RobotLog
 import com.rowanmcalpin.nextftc.command.Command
 import com.rowanmcalpin.nextftc.command.utility.CustomCommand
 import com.rowanmcalpin.nextftc.controls.GamepadEx
@@ -12,6 +14,9 @@ import com.rowanmcalpin.nextftc.subsystems.MotorToPosition
 import com.rowanmcalpin.nextftc.subsystems.MotorToPositionDepowerOnEnd
 import com.rowanmcalpin.nextftc.subsystems.PowerMotor
 import com.rowanmcalpin.nextftc.subsystems.Subsystem
+import kotlin.math.abs
+import kotlin.math.min
+import kotlin.math.sign
 
 @Config
 object Lift: Subsystem {
@@ -52,15 +57,44 @@ object Lift: Subsystem {
     val countsPerInch = motor1.ticksPerRev * gearReduction / (2 * pulleyRadius * Math.PI)
 
     val aLittleHigh: Command
-        get() = MotorToPosition(motorGroup, aLittleHighPos, 1.0, listOf(this@Lift))
+        get() = CustomCommand(getDone = { LiftControl.withinDistanceOfTarget() }, _start = {
+            LiftControl.targetPosition = aLittleHighPos
+            LiftControl.commandRunning = true
+        }, _done = {
+            LiftControl.commandRunning = false
+        })
+
     val toIntake: Command
-        get() = MotorToPositionDepowerOnEnd(motorGroup, intakePos, 1.0, listOf(this@Lift))
+        get() = CustomCommand(getDone = { LiftControl.withinDistanceOfTarget() }, _start = {
+            LiftControl.targetPosition = intakePos
+            LiftControl.commandRunning = true
+        }, _done = {
+            LiftControl.commandRunning = false
+        })
+
     val toSpecimenPickup: Command
-        get() = MotorToPosition(motorGroup, specimenPickup, 1.0, listOf(this@Lift))
+        get() = CustomCommand(getDone = { LiftControl.withinDistanceOfTarget() }, _start = {
+            LiftControl.targetPosition = specimenPickup
+            LiftControl.commandRunning = true
+        }, _done = {
+            LiftControl.commandRunning = false
+        })
+
     val toSpecimenScoreHigh: Command
-        get() = MotorToPosition(motorGroup, specimenScoreHigh, 1.0, listOf(this@Lift))
+        get() = CustomCommand(getDone = { LiftControl.withinDistanceOfTarget() }, _start = {
+            LiftControl.targetPosition = specimenScoreHigh
+            LiftControl.commandRunning = true
+        }, _done = {
+            LiftControl.commandRunning = false
+        })
+
     val toHigh: Command
-        get() = MotorToPosition(motorGroup, highPos, 1.0, listOf(this@Lift))
+        get() = CustomCommand(getDone = { LiftControl.withinDistanceOfTarget() }, _start = {
+            LiftControl.targetPosition = highPos
+            LiftControl.commandRunning = true
+        }, _done = {
+            LiftControl.commandRunning = false
+        })
 
 
     val up: Command
@@ -82,6 +116,35 @@ object Lift: Subsystem {
 
     fun setRunMode(mode: DcMotor.RunMode) {
         motorGroup.mode = mode
+    }
+
+    public class LiftControl: Command() {
+        override val _isDone = false
+
+        companion object {
+            var targetPosition = 0;
+            var commandRunning = false;
+
+            fun withinDistanceOfTarget(): Boolean {
+                return abs(targetPosition - motorGroup.currentPosition) <= 20
+            }
+        }
+
+        override fun onStart() {
+            targetPosition = 0;
+        }
+
+        override fun onExecute() {
+            val error = targetPosition - motorGroup.currentPosition
+            val direction = sign(error.toDouble())
+            var power = 0.008 * abs(error) * maxSpeed * direction - 0.03
+            // Depower if the lift is within 20 ticks of 0
+            if (abs(0 - motorGroup.currentPosition) <= 20 && abs(0 - targetPosition) <= 20 && !commandRunning) {
+                power = 0.0
+            }
+
+            motorGroup.power = Range.clip(power, -min(maxSpeed, 1.0), min(maxSpeed, 1.0))
+        }
     }
 
     override fun initialize() {

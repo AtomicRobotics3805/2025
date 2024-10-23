@@ -37,16 +37,10 @@ class TestingTeleOp: NextFTCOpMode(Arm, Claw, Intake, IntakeExtension, IntakePiv
 
     override fun onInit() {
         Constants.opMode = this
-        IntakePivot.intakePivotUp()
-        Arm.toIntakePos()
-        Claw.open()
-        SequentialCommandGroup(
-//            Intake.wakeUp,
-            Intake.start
-        )()
         Lights.DisplayColor()()
         IntakeSensor.DetectColor()()
         IntakeExtension.extensionIn()
+        Lift.LiftControl()()
         super.telemetry.addData("Lift position", Lift.motor1.currentPosition)
         super.telemetry.addData("Lift target", Lift.motor1.targetPosition)
         super.telemetry.addData("Lift power", Lift.motor1.power)
@@ -56,7 +50,7 @@ class TestingTeleOp: NextFTCOpMode(Arm, Claw, Intake, IntakeExtension, IntakePiv
 
     override fun onUpdate() {
         telemetryData.add(Pair("Lift position", Lift.motor1.currentPosition))
-        telemetryData.add(Pair("Lift target", Lift.motor1.targetPosition))
+        telemetryData.add(Pair("Lift target", Lift.LiftControl.targetPosition))
         telemetryData.add(Pair("Lift power", Lift.motor1.power))
         telemetryData.add(Pair("IntakeExtension", IntakeExtension.motor.currentPosition))
         telemetryData.add(Pair("Drive", drive.getWheelVelocities()))
