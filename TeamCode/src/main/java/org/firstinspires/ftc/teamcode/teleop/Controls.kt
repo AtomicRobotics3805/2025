@@ -17,16 +17,13 @@ class Controls: Controls() {
             reverseTurn =  DriveConstants.REVERSE_TURN)
         dc()
 
-        gamepad2.leftStick.button.pressedCommand = { Lift.resetEncoder }
-
+        gamepad2.leftStick.button.pressedCommand = { Lift.Zero() }
 
         gamepad1.x.pressedCommand = { dc.resetRotation }
 
         gamepad1.a.pressedCommand = { TeleOpRoutines.outToIntake }
         gamepad1.rightTrigger.pressedCommand = { Intake.start }
-        gamepad1.rightTrigger.releasedCommand = { Intake.stop }
         gamepad1.leftTrigger.pressedCommand = { Intake.reverse }
-        gamepad1.leftTrigger.releasedCommand = { Intake.stop }
 
         gamepad1.leftBumper.pressedCommand = { TeleOpRoutines.slightlyOutToIntake }
 

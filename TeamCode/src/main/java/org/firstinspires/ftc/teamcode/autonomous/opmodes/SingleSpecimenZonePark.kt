@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.autonomous.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.rowanmcalpin.nextftc.Constants
 import com.rowanmcalpin.nextftc.driving.drivers.MecanumDrive
 import com.rowanmcalpin.nextftc.driving.localizers.TwoWheelOdometryLocalizer
@@ -19,6 +20,7 @@ import org.firstinspires.ftc.teamcode.mechanisms.Lift
 import org.firstinspires.ftc.teamcode.mechanisms.Lights
 
 @Autonomous(name = "Single Specimen Zone Park")
+@Disabled
 class SingleSpecimenZonePark: NextFTCOpMode(Arm, Claw, Intake, IntakeExtension, IntakePivot, IntakeSensor, Lift, Lights) {
     override val color = Constants.Color.BLUE // Doesn't actually matter, since the field is rotationally symmetrical
     override val trajectoryFactory = TrajectoryFactory

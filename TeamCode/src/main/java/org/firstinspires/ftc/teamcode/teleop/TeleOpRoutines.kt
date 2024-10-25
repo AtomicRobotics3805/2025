@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.mechanisms.Lift
 object TeleOpRoutines {
     val outToIntake: Command
         get() = SequentialCommandGroup(
+            IntakePivot.intakePivotUp,
             IntakeExtension.extensionOut,
             IntakePivot.intakePivotDown,
             Intake.start
@@ -22,7 +23,11 @@ object TeleOpRoutines {
     val slightlyOutToIntake: Command
         get() = SequentialCommandGroup(
             IntakeExtension.extensionSlightlyOut,
-            IntakePivot.intakePivotDown,
+
+            SequentialCommandGroup(
+                IntakePivot.intakePivotUp,
+                IntakePivot.intakePivotDownMore
+            ),
             Intake.start
         )
 
@@ -34,7 +39,7 @@ object TeleOpRoutines {
                 Lift.aLittleHigh,
                 Claw.open,
                 SequentialCommandGroup(
-                    Delay(1.0),
+                    Delay(0.5),
                     Arm.toIntakePos
                 )
             ),
@@ -63,19 +68,27 @@ object TeleOpRoutines {
     val specimenPickupToScore: Command
         get() = SequentialCommandGroup(
             Claw.close,
-            Lift.toSpecimenScoreHigh
+            Lift.toSpecimenScoreHigh,
+            Arm.toSpecimenPreScorePos
         )
 
     val toSpecimenPickup: Command
         get() = SequentialCommandGroup(
             ParallelCommandGroup(
                 SequentialCommandGroup(
-                    Delay(0.5),
-                    Claw.open,
+                    Delay(0.8),
+                    Claw.specimenOpen,
                 ),
-                Lift.toSpecimenPickup
-            ),
-            Arm.toSpecimenPickupPos
+                SequentialCommandGroup(
+                    Delay(0.8),
+                    Lift.toIntake
+                ),
+                SequentialCommandGroup(
+                    Arm.toSpecimenScorePos,
+                    Delay(0.2),
+                    Arm.toSpecimenPickupPos
+                )
+            )
         )
 
     val reset: Command

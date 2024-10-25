@@ -9,6 +9,7 @@ import com.rowanmcalpin.nextftc.controls.Controls
 import com.rowanmcalpin.nextftc.driving.drivers.MecanumDrive
 import com.rowanmcalpin.nextftc.driving.localizers.TwoWheelOdometryLocalizer
 import com.rowanmcalpin.nextftc.opmodes.NextFTCOpMode
+import com.rowanmcalpin.nextftc.trajectories.rad
 import org.firstinspires.ftc.teamcode.drive.DriveConstants
 import org.firstinspires.ftc.teamcode.localization.OdometryConstants
 import org.firstinspires.ftc.teamcode.mechanisms.Arm
@@ -23,7 +24,7 @@ import org.firstinspires.ftc.teamcode.mechanisms.Lights
 @TeleOp(name="Testing TeleOp")
 class TestingTeleOp: NextFTCOpMode(Arm, Claw, Intake, IntakeExtension, IntakePivot, Lift, Lights, IntakeSensor) {
     override val controls: Controls = org.firstinspires.ftc.teamcode.teleop.Controls()
-    override val drive = MecanumDrive(DriveConstants, TwoWheelOdometryLocalizer(OdometryConstants), { Pose2d(0.0, 0.0, 0.0) })
+    override val drive = MecanumDrive(DriveConstants, TwoWheelOdometryLocalizer(OdometryConstants), { Pose2d(0.0, 0.0, 90.rad) })
 //
 //
 //    lateinit var lf: DcMotor;
@@ -37,10 +38,12 @@ class TestingTeleOp: NextFTCOpMode(Arm, Claw, Intake, IntakeExtension, IntakePiv
 
     override fun onInit() {
         Constants.opMode = this
+        Lift.resetEncoder()
         Lights.DisplayColor()()
         IntakeSensor.DetectColor()()
-        IntakeExtension.extensionIn()
         Lift.LiftControl()()
+        IntakeExtension.IntakeExtensionControl()()
+        IntakeExtension.zero()
         super.telemetry.addData("Lift position", Lift.motor1.currentPosition)
         super.telemetry.addData("Lift target", Lift.motor1.targetPosition)
         super.telemetry.addData("Lift power", Lift.motor1.power)
@@ -53,6 +56,7 @@ class TestingTeleOp: NextFTCOpMode(Arm, Claw, Intake, IntakeExtension, IntakePiv
         telemetryData.add(Pair("Lift target", Lift.LiftControl.targetPosition))
         telemetryData.add(Pair("Lift power", Lift.motor1.power))
         telemetryData.add(Pair("IntakeExtension", IntakeExtension.motor.currentPosition))
+        telemetryData.add(Pair("Intake Extension target", IntakeExtension.IntakeExtensionControl.targetPosition))
         telemetryData.add(Pair("Drive", drive.getWheelVelocities()))
         updateOurTelemetry()
 //        var driveP = -gamepad1.left_stick_y

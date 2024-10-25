@@ -26,7 +26,7 @@ object IntakeExtension: Subsystem {
     var maxSpeed = 1.0
 
     @JvmField
-    var inPos = 50
+    var inPos = 69
     @JvmField
     var outPos = 1200 // TODO
     @JvmField
@@ -38,17 +38,83 @@ object IntakeExtension: Subsystem {
     val gearReduction = 1.0
     val countsPerInch = motor.ticksPerRev * gearReduction / (2 * pulleyRadius * Math.PI)
 
+    val zero: Command
+        get() = CustomCommand(getDone = { IntakeExtensionControl.withinDistanceOfTarget() }, _start = {
+            IntakeExtensionControl.targetPosition = 0
+            IntakeExtensionControl.commandRunning = true
+        }, _done = {
+            IntakeExtensionControl.commandRunning = false
+        })
     val extensionIn: Command
-        get() = MotorToPosition(motor, inPos, 1.0, listOf(this@IntakeExtension))
+        get() = CustomCommand(getDone = { IntakeExtensionControl.withinDistanceOfTarget() }, _start = {
+            IntakeExtensionControl.targetPosition = inPos
+            IntakeExtensionControl.commandRunning = true
+        }, _done = {
+            IntakeExtensionControl.commandRunning = false
+        })
+    val extensionExtraIn: Command
+        get() = CustomCommand(getDone = { IntakeExtensionControl.withinDistanceOfTarget() }, _start = {
+            IntakeExtensionControl.targetPosition = -15
+            IntakeExtensionControl.commandRunning = true
+        }, _done = {
+            IntakeExtensionControl.commandRunning = false
+        })
     val extensionOut: Command
-        get() = MotorToPosition(motor, outPos, 1.0, listOf(this@IntakeExtension))
+        get() = CustomCommand(getDone = { IntakeExtensionControl.withinDistanceOfTarget() }, _start = {
+            IntakeExtensionControl.targetPosition = outPos
+            IntakeExtensionControl.commandRunning = true
+        }, _done = {
+            IntakeExtensionControl.commandRunning = false
+        })
     val extensionSlightlyOut: Command
-        get() = MotorToPosition(motor, slightlyOutPos, 1.0, listOf(this@IntakeExtension))
+        get() = CustomCommand(getDone = { IntakeExtensionControl.withinDistanceOfTarget() }, _start = {
+            IntakeExtensionControl.targetPosition = slightlyOutPos
+            IntakeExtensionControl.commandRunning = true
+        }, _done = {
+            IntakeExtensionControl.commandRunning = false
+        })
 
     val resetEncoder: Command
         get() = CustomCommand(getDone = { true }, _start = {
             setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER)
         })
+
+    public class IntakeExtensionControl: Command() {
+        override val _isDone = false
+
+        companion object {
+            var targetPosition = 0;
+            var commandRunning = false;
+
+            fun withinDistanceOfTarget(): Boolean {
+                return abs(targetPosition - motor.currentPosition) <= 20
+            }
+        }
+
+        override fun onStart() {
+            targetPosition = 0;
+        }
+
+        override fun onExecute() {
+            motor.targetPosition = targetPosition
+            var power = maxSpeed
+
+            if (abs(motor.currentPosition) <= 20 && abs(targetPosition) <= 20 && !commandRunning) {
+                power = 0.0
+            }
+//            val error = targetPosition - motorGroup.currentPosition
+//            val direction = sign(error.toDouble())
+//            var power = 0.008 * abs(error) * maxSpeed * direction - 0.03
+//            // Depower if the lift is within 20 ticks of 0
+//            if (abs(0 - motorGroup.currentPosition) <= 20 && abs(0 - targetPosition) <= 20 && !commandRunning) {
+//                power = 0.0
+//            }
+
+//            motorGroup.power = Range.clip(power, -min(maxSpeed, 1.0), min(maxSpeed, 1.0))
+            motor.power = power
+            motor.mode = DcMotor.RunMode.RUN_TO_POSITION
+        }
+    }
 
     fun manual(speed: Double) {
         motor.power = speed

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.mechanisms
 import com.acmerobotics.dashboard.config.Config
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorSimple
+import com.qualcomm.robotcore.util.ElapsedTime
 import com.qualcomm.robotcore.util.Range
 import com.qualcomm.robotcore.util.RobotLog
 import com.rowanmcalpin.nextftc.command.Command
@@ -32,7 +33,7 @@ object Lift: Subsystem {
     var motor2Direction = DcMotorSimple.Direction.FORWARD
 
     @JvmField
-    var intakePos = -5
+    var intakePos = -40
     @JvmField
     var specimenPickup = 300 // TODO
     @JvmField
@@ -40,7 +41,7 @@ object Lift: Subsystem {
     @JvmField
     var aLittleHighPos = 300
     @JvmField
-    var specimenScoreHigh = 1800 // TODO
+    var specimenScoreHigh = 820 // TODO
 
     @JvmField
     var maxSpeed = 1.0
@@ -58,6 +59,7 @@ object Lift: Subsystem {
 
     val aLittleHigh: Command
         get() = CustomCommand(getDone = { LiftControl.withinDistanceOfTarget() }, _start = {
+            LiftControl.zeroPower = false
             LiftControl.targetPosition = aLittleHighPos
             LiftControl.commandRunning = true
         }, _done = {
@@ -66,22 +68,36 @@ object Lift: Subsystem {
 
     val toIntake: Command
         get() = CustomCommand(getDone = { LiftControl.withinDistanceOfTarget() }, _start = {
+            LiftControl.zeroPower = false
             LiftControl.targetPosition = intakePos
             LiftControl.commandRunning = true
         }, _done = {
             LiftControl.commandRunning = false
+            LiftControl.zeroPower = true
         })
 
-    val toSpecimenPickup: Command
-        get() = CustomCommand(getDone = { LiftControl.withinDistanceOfTarget() }, _start = {
-            LiftControl.targetPosition = specimenPickup
+    class Zero: Command() {
+        private var timer = ElapsedTime();
+
+        override val _isDone: Boolean
+            get() = timer.seconds() > 0.75 || LiftControl.withinDistanceOfTarget()
+
+        override fun onStart() {
+            LiftControl.zeroPower = false
+            LiftControl.targetPosition = -60
             LiftControl.commandRunning = true
-        }, _done = {
+            timer.reset()
+        }
+
+        override fun onEnd(interrupted: Boolean) {
             LiftControl.commandRunning = false
-        })
+            motorGroup.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
+        }
+    }
 
     val toSpecimenScoreHigh: Command
         get() = CustomCommand(getDone = { LiftControl.withinDistanceOfTarget() }, _start = {
+            LiftControl.zeroPower = false
             LiftControl.targetPosition = specimenScoreHigh
             LiftControl.commandRunning = true
         }, _done = {
@@ -90,6 +106,7 @@ object Lift: Subsystem {
 
     val toHigh: Command
         get() = CustomCommand(getDone = { LiftControl.withinDistanceOfTarget() }, _start = {
+            LiftControl.zeroPower = false
             LiftControl.targetPosition = highPos
             LiftControl.commandRunning = true
         }, _done = {
@@ -125,8 +142,10 @@ object Lift: Subsystem {
             var targetPosition = 0;
             var commandRunning = false;
 
+            var zeroPower = false;
+
             fun withinDistanceOfTarget(): Boolean {
-                return abs(targetPosition - motorGroup.currentPosition) <= 20
+                return abs(targetPosition - motorGroup.currentPosition) <= 60
             }
         }
 
@@ -135,23 +154,31 @@ object Lift: Subsystem {
         }
 
         override fun onExecute() {
-            val error = targetPosition - motorGroup.currentPosition
-            val direction = sign(error.toDouble())
-            var power = 0.008 * abs(error) * maxSpeed * direction - 0.03
-            // Depower if the lift is within 20 ticks of 0
-            if (abs(0 - motorGroup.currentPosition) <= 20 && abs(0 - targetPosition) <= 20 && !commandRunning) {
+            motorGroup.targetPosition = targetPosition
+            var power = maxSpeed
+
+//            if (abs(motorGroup.currentPosition) <= 20 && abs(targetPosition) <= 20 && !commandRunning) {
+//                power = 0.0
+//            }
+//            val error = targetPosition - motorGroup.currentPosition
+//            val direction = sign(error.toDouble())
+//            var power = 0.008 * abs(error) * maxSpeed * direction - 0.03
+//            // Depower if the lift is within 20 ticks of 0
+            if (zeroPower) {
                 power = 0.0
             }
 
-            motorGroup.power = Range.clip(power, -min(maxSpeed, 1.0), min(maxSpeed, 1.0))
+//            motorGroup.power = Range.clip(power, -min(maxSpeed, 1.0), min(maxSpeed, 1.0))
+            motorGroup.power = power
+            motorGroup.mode = DcMotor.RunMode.RUN_TO_POSITION
         }
     }
 
     override fun initialize() {
-        motor1.initialize()
-        motor1.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
-        motor1.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
-        motor2.initialize()
-        motor2.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
+        motorGroup.initialize()
+        motorGroup.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
+        motorGroup.targetPosition = 0
+        motorGroup.power = 1.0
+        motorGroup.mode = DcMotor.RunMode.RUN_TO_POSITION
     }
 }

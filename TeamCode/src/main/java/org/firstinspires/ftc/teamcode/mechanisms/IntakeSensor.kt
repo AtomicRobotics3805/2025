@@ -53,6 +53,17 @@ object IntakeSensor: Subsystem {
         }
     }
 
+    public class BlockUntilDetected: Command() {
+        private val watchdog = ElapsedTime()
+        private val watchdogThreshold = 2.0
+        override val _isDone
+            get() = sensor.getDistance(DistanceUnit.CM) < 2 || watchdog.seconds() > watchdogThreshold
+
+        override fun onStart() {
+            watchdog.reset()
+        }
+    }
+
     override fun initialize() {
         sensor = Constants.opMode.hardwareMap.get(RevColorSensorV3::class.java, "intake_sensor")
     }
