@@ -6,7 +6,7 @@ import com.rowanmcalpin.nextftc.command.groups.ParallelCommandGroup
 import com.rowanmcalpin.nextftc.command.groups.SequentialCommandGroup
 import com.rowanmcalpin.nextftc.command.utility.Delay
 import com.rowanmcalpin.nextftc.command.utility.StopOpModeCommand
-import org.firstinspires.ftc.teamcode.autonomous.routines.Routines.scoreToRepeat
+import org.firstinspires.ftc.teamcode.autonomous.routines.Routines.scoreToIntake
 import org.firstinspires.ftc.teamcode.autonomous.trajectories.TrajectoryFactory
 import org.firstinspires.ftc.teamcode.mechanisms.Arm
 import org.firstinspires.ftc.teamcode.mechanisms.Claw
@@ -196,7 +196,7 @@ object SampleRoutines {
     val twoSampleAscentPark: Command
         get() = SequentialCommandGroup(
             leftStartToHighBasketScore,
-            scoreToRepeat,
+            scoreToIntake,
             highBasketScoreToIntakeRight,
             ParallelCommandGroup(
                 IntakeSensor.BlockUntilDetected(),
@@ -212,14 +212,14 @@ object SampleRoutines {
     val threeSampleAscentPark: Command
         get() = SequentialCommandGroup(
             leftStartToHighBasketScore,
-            scoreToRepeat,
+            scoreToIntake,
             highBasketScoreToIntakeRight,
             ParallelCommandGroup(
                 IntakeSensor.BlockUntilDetected(),
                 Constants.drive.followTrajectory(TrajectoryFactory.pickupRightSample)
             ),
             rightSampleToHighScore,
-            scoreToRepeat,
+            scoreToIntake,
             highBasketScoreToIntakeCenter,
             ParallelCommandGroup(
                 IntakeSensor.BlockUntilDetected(),
@@ -237,7 +237,7 @@ object SampleRoutines {
             leftStartToHighBasketScore,
             Claw.open,
             ParallelCommandGroup(
-                scoreToRepeat,
+                scoreToIntake,
                 highBasketScoreToIntakeRight,
                 IntakeSensor.BlockUntilDetected(),
                 SequentialCommandGroup(
@@ -248,7 +248,7 @@ object SampleRoutines {
             rightSampleToHighScore,
             Claw.open,
             ParallelCommandGroup(
-                scoreToRepeat,
+                scoreToIntake,
                 highBasketScoreToIntakeCenter,
                 IntakeSensor.BlockUntilDetected(),
                 SequentialCommandGroup(
@@ -259,7 +259,7 @@ object SampleRoutines {
             centerSampleToHighScore,
             Claw.open,
             ParallelCommandGroup(
-                scoreToRepeat,
+                scoreToIntake,
                 highBasketScoreToIntakeLeft,
                 IntakeSensor.BlockUntilDetected(1.0),
                 SequentialCommandGroup(
