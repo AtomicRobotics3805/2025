@@ -28,20 +28,20 @@ object Lift: Subsystem {
     @JvmField
     var motorRatio = 19.2
     @JvmField
-    var motorDirection = DcMotorSimple.Direction.FORWARD
+    var motorDirection = DcMotorSimple.Direction.REVERSE
     @JvmField
     var motor2Direction = DcMotorSimple.Direction.FORWARD
 
     @JvmField
-    var intakePos = -40
+    var intakePos = -1.0 // Inches // TODO
     @JvmField
-    var specimenPickup = 300 // TODO
+    var specimenPickup = 3.0 // Inches // TODO
     @JvmField
-    var highPos = 2850
+    var highPos = 24.0 // Inches // TODO
     @JvmField
-    var aLittleHighPos = 300
+    var aLittleHighPos = 3.0 // Inches // TODO
     @JvmField
-    var specimenScoreHigh = 820 // TODO
+    var specimenScoreHigh = 12.0 // Inches // TODO
 
     @JvmField
     var maxSpeed = 1.0
@@ -50,17 +50,16 @@ object Lift: Subsystem {
     var motor1 = MotorEx(name, MotorEx.MotorType.GOBILDA_YELLOWJACKET, motorRatio, motorDirection)
     var motor2 = MotorEx(name2, MotorEx.MotorType.GOBILDA_YELLOWJACKET, motorRatio, motor2Direction)
 
-    var motorGroup = MotorExGroup(motor1, motor2)
-
-
+    @JvmField
     val pulleyRadius = 0.5 // Inches
+    @JvmField
     val gearReduction = 1.0
     val countsPerInch = motor1.ticksPerRev * gearReduction / (2 * pulleyRadius * Math.PI)
 
     val aLittleHigh: Command
         get() = CustomCommand(getDone = { LiftControl.withinDistanceOfTarget() }, _start = {
             LiftControl.zeroPower = false
-            LiftControl.targetPosition = aLittleHighPos
+            LiftControl.targetPosition = (aLittleHighPos * countsPerInch).toInt()
             LiftControl.commandRunning = true
         }, _done = {
             LiftControl.commandRunning = false
@@ -69,11 +68,20 @@ object Lift: Subsystem {
     val toIntake: Command
         get() = CustomCommand(getDone = { LiftControl.withinDistanceOfTarget() }, _start = {
             LiftControl.zeroPower = false
-            LiftControl.targetPosition = intakePos
+            LiftControl.targetPosition = (intakePos * countsPerInch).toInt()
             LiftControl.commandRunning = true
         }, _done = {
             LiftControl.commandRunning = false
             LiftControl.zeroPower = true
+        })
+
+    val toHang: Command
+        get() = CustomCommand(getDone = { LiftControl.withinDistanceOfTarget() }, _start = {
+            LiftControl.zeroPower = false
+            LiftControl.targetPosition = (intakePos * countsPerInch).toInt()
+            LiftControl.commandRunning = true
+        }, _done = {
+            LiftControl.commandRunning = false
         })
 
     class Zero: Command() {
@@ -91,14 +99,24 @@ object Lift: Subsystem {
 
         override fun onEnd(interrupted: Boolean) {
             LiftControl.commandRunning = false
-            motorGroup.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
+            motor1.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
+            motor2.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
         }
     }
 
     val toSpecimenScoreHigh: Command
         get() = CustomCommand(getDone = { LiftControl.withinDistanceOfTarget() }, _start = {
             LiftControl.zeroPower = false
-            LiftControl.targetPosition = specimenScoreHigh
+            LiftControl.targetPosition = (specimenScoreHigh * countsPerInch).toInt()
+            LiftControl.commandRunning = true
+        }, _done = {
+            LiftControl.commandRunning = false
+        })
+
+    val toSpecimenPickup: Command
+        get() = CustomCommand(getDone = { LiftControl.withinDistanceOfTarget() }, _start = {
+            LiftControl.zeroPower = false
+            LiftControl.targetPosition = (specimenPickup * countsPerInch).toInt()
             LiftControl.commandRunning = true
         }, _done = {
             LiftControl.commandRunning = false
@@ -107,20 +125,11 @@ object Lift: Subsystem {
     val toHigh: Command
         get() = CustomCommand(getDone = { LiftControl.withinDistanceOfTarget() }, _start = {
             LiftControl.zeroPower = false
-            LiftControl.targetPosition = highPos
+            LiftControl.targetPosition = (highPos * countsPerInch).toInt()
             LiftControl.commandRunning = true
         }, _done = {
             LiftControl.commandRunning = false
         })
-
-
-    val up: Command
-        get() = PowerMotor(motorGroup, 0.8, DcMotor.RunMode.RUN_WITHOUT_ENCODER, listOf(this@Lift))
-
-    val down: Command
-        get() = PowerMotor(motorGroup, -0.8, DcMotor.RunMode.RUN_WITHOUT_ENCODER, listOf(this@Lift))
-    val stop: Command
-        get() = PowerMotor(motorGroup, 0.0, DcMotor.RunMode.RUN_WITHOUT_ENCODER, listOf(this@Lift))
 
     val resetEncoder: Command
         get() = CustomCommand(getDone = { true }, _start = {
@@ -128,11 +137,13 @@ object Lift: Subsystem {
         })
 
     fun manual(speed: Double) {
-        motorGroup.power = speed
+        motor1.power = speed
+        motor2.power = speed
     }
 
     fun setRunMode(mode: DcMotor.RunMode) {
-        motorGroup.mode = mode
+        motor1.mode = mode
+        motor2.mode = mode
     }
 
     public class LiftControl: Command() {
@@ -145,7 +156,7 @@ object Lift: Subsystem {
             var zeroPower = false;
 
             fun withinDistanceOfTarget(): Boolean {
-                return abs(targetPosition - motorGroup.currentPosition) <= 60
+                return abs(targetPosition - motor1.currentPosition) <= 100
             }
         }
 
@@ -154,7 +165,8 @@ object Lift: Subsystem {
         }
 
         override fun onExecute() {
-            motorGroup.targetPosition = targetPosition
+            motor1.targetPosition = targetPosition
+            motor2.targetPosition = targetPosition
             var power = maxSpeed
 
 //            if (abs(motorGroup.currentPosition) <= 20 && abs(targetPosition) <= 20 && !commandRunning) {
@@ -169,16 +181,23 @@ object Lift: Subsystem {
             }
 
 //            motorGroup.power = Range.clip(power, -min(maxSpeed, 1.0), min(maxSpeed, 1.0))
-            motorGroup.power = power
-            motorGroup.mode = DcMotor.RunMode.RUN_TO_POSITION
+            motor1.power = power
+            motor2.power = power
+            motor1.mode = DcMotor.RunMode.RUN_TO_POSITION
+            motor2.mode = DcMotor.RunMode.RUN_TO_POSITION
         }
     }
 
     override fun initialize() {
-        motorGroup.initialize()
-        motorGroup.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
-        motorGroup.targetPosition = 0
-        motorGroup.power = 1.0
-        motorGroup.mode = DcMotor.RunMode.RUN_TO_POSITION
+        motor1.initialize()
+        motor2.initialize()
+        motor1.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
+        motor2.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
+        motor1.targetPosition = 0
+        motor2.targetPosition = 0
+        motor1.power = 1.0
+        motor2.power = 1.0
+        motor1.mode = DcMotor.RunMode.RUN_TO_POSITION
+        motor2.mode = DcMotor.RunMode.RUN_TO_POSITION
     }
 }

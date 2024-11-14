@@ -44,6 +44,7 @@ class TestingTeleOp: NextFTCOpMode(Arm, Claw, Intake, IntakeExtension, IntakePiv
         Lift.LiftControl()()
         IntakeExtension.IntakeExtensionControl()()
         IntakeExtension.zero()
+        IntakeSensor.IntakeStopOnIntaken()
         super.telemetry.addData("Lift position", Lift.motor1.currentPosition)
         super.telemetry.addData("Lift target", Lift.motor1.targetPosition)
         super.telemetry.addData("Lift power", Lift.motor1.power)

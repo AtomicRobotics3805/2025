@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.dotstar;
 
 import android.graphics.Color;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -19,6 +20,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * @version 2.0.0
  */
 @TeleOp()
+@Disabled
 public class DotStarTestUsingGamepadSPI extends LinearOpMode {
 
 

@@ -38,6 +38,9 @@ class Controls: Controls() {
         gamepad1.rightBumper.pressedCommand = { Constants.drive.switchSpeed() }
         gamepad1.rightBumper.releasedCommand = { Constants.drive.switchSpeed() }
 
+        gamepad2.dpadUp.pressedCommand = { TeleOpRoutines.toHang }
+        gamepad2.dpadDown.pressedCommand = { Lift.toHang }
+
         /*
         gamepad1.a.pressedCommand = { TeleOpRoutines.outToIntake }
         gamepad1.b.pressedCommand = { TeleOpRoutines.inToTransfer }

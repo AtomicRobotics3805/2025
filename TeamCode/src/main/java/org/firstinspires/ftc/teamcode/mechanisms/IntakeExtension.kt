@@ -31,6 +31,8 @@ object IntakeExtension: Subsystem {
     var outPos = 1200 // TODO
     @JvmField
     var slightlyOutPos = 300 // TODO
+    @JvmField
+    var middlePos = 600
 
     val motor = MotorEx(name, MotorEx.MotorType.GOBILDA_YELLOWJACKET, motorRatio, motorDirection)
 
@@ -55,6 +57,13 @@ object IntakeExtension: Subsystem {
     val extensionExtraIn: Command
         get() = CustomCommand(getDone = { IntakeExtensionControl.withinDistanceOfTarget() }, _start = {
             IntakeExtensionControl.targetPosition = -15
+            IntakeExtensionControl.commandRunning = true
+        }, _done = {
+            IntakeExtensionControl.commandRunning = false
+        })
+    val extensionMiddle: Command
+        get() = CustomCommand(getDone = { IntakeExtensionControl.withinDistanceOfTarget() }, _start = {
+            IntakeExtensionControl.targetPosition = middlePos
             IntakeExtensionControl.commandRunning = true
         }, _done = {
             IntakeExtensionControl.commandRunning = false

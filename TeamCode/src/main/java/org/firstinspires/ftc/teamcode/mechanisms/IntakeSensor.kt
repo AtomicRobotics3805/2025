@@ -53,15 +53,30 @@ object IntakeSensor: Subsystem {
         }
     }
 
-    public class BlockUntilDetected: Command() {
+    public class IntakeStopOnIntaken(): Command() {
+        override val _isDone: Boolean
+            get() = false
+
+        override fun onExecute() {
+            if (sensor.getDistance(DistanceUnit.CM) < 2) {
+                Intake.stop()
+            }
+        }
+    }
+
+    public class BlockUntilDetected(val watchdogThreshold: Double = 2.0): Command() {
         private val watchdog = ElapsedTime()
-        private val watchdogThreshold = 2.0
         override val _isDone
             get() = sensor.getDistance(DistanceUnit.CM) < 2 || watchdog.seconds() > watchdogThreshold
 
         override fun onStart() {
             watchdog.reset()
         }
+    }
+
+    public class BlockUntilDetectedNoWatchdog(): Command() {
+        override val _isDone
+            get() = sensor.getDistance(DistanceUnit.CM) < 2
     }
 
     override fun initialize() {

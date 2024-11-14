@@ -12,7 +12,6 @@ import com.rowanmcalpin.nextftc.trajectories.toRadians
 
 @Config
 object DriveConstants: MecanumDriveConstants{
-
     @JvmField
     var _DRIFT_MULTIPLIER = 1.0
     @JvmField
@@ -40,12 +39,12 @@ object DriveConstants: MecanumDriveConstants{
     @JvmField
     var _MAX_ACCEL = 40.0
     @JvmField
-    var _MAX_ANG_ACCEL = 30.0.toRadians
+    var _MAX_ANG_ACCEL = 60.0.toRadians
     @JvmField
     var _MAX_ANG_VEL = 60.0.toRadians
     // Theoretical max velocity assuming no load on motors: 86.0846416947 in/sec.
     @JvmField
-    var _MAX_VEL = 60.0
+    var _MAX_VEL = 40.0
     @JvmField
     var _MAX_RPM = 435.0
     @JvmField

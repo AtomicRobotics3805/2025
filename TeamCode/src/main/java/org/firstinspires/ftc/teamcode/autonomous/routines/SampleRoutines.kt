@@ -1,0 +1,278 @@
+package org.firstinspires.ftc.teamcode.autonomous.routines
+
+import com.rowanmcalpin.nextftc.Constants
+import com.rowanmcalpin.nextftc.command.Command
+import com.rowanmcalpin.nextftc.command.groups.ParallelCommandGroup
+import com.rowanmcalpin.nextftc.command.groups.SequentialCommandGroup
+import com.rowanmcalpin.nextftc.command.utility.Delay
+import com.rowanmcalpin.nextftc.command.utility.StopOpModeCommand
+import org.firstinspires.ftc.teamcode.autonomous.routines.Routines.scoreToRepeat
+import org.firstinspires.ftc.teamcode.autonomous.trajectories.TrajectoryFactory
+import org.firstinspires.ftc.teamcode.mechanisms.Arm
+import org.firstinspires.ftc.teamcode.mechanisms.Claw
+import org.firstinspires.ftc.teamcode.mechanisms.Intake
+import org.firstinspires.ftc.teamcode.mechanisms.IntakeExtension
+import org.firstinspires.ftc.teamcode.mechanisms.IntakePivot
+import org.firstinspires.ftc.teamcode.mechanisms.IntakeSensor
+import org.firstinspires.ftc.teamcode.mechanisms.Lift
+
+object SampleRoutines {
+    /**
+     * Left-side start to high basket score
+     */
+    val leftStartToHighBasketScore: Command
+        get() = ParallelCommandGroup(
+            Constants.drive.followTrajectory(TrajectoryFactory.leftStartToHighBasket),
+            SequentialCommandGroup(
+                IntakeExtension.extensionSlightlyOut,
+                IntakeExtension.extensionIn
+            ),
+            Lift.toHigh,
+            SequentialCommandGroup(
+                Delay(1.0),
+                Arm.toScorePos
+            )
+        )
+
+    /**
+     * Score to ascent pos
+     */
+    val highBasketScoreToAscent: Command
+        get() = ParallelCommandGroup(
+            Constants.drive.followTrajectory(TrajectoryFactory.highBasketToAscentPark),
+            SequentialCommandGroup(
+                Lift.toIntake,
+                Lift.Zero()
+            ),
+            Arm.toAscentOnePos
+        )
+
+    val highBasketScoreToIntakeRight: Command
+        get() = ParallelCommandGroup(
+            SequentialCommandGroup(
+                IntakePivot.intakePivotUp,
+                IntakeExtension.extensionSlightlyOut,
+                IntakePivot.intakePivotDownMore
+            ),
+            SequentialCommandGroup(
+                Intake.start,
+                IntakeSensor.BlockUntilDetectedNoWatchdog(),
+                Intake.stop,
+            ),
+
+            Constants.drive.followTrajectory(TrajectoryFactory.highBasketToRightSample)
+        )
+
+    val highBasketScoreToIntakeCenter: Command
+        get() = ParallelCommandGroup(
+            SequentialCommandGroup(
+                IntakePivot.intakePivotUp,
+                IntakeExtension.extensionSlightlyOut,
+                IntakePivot.intakePivotDownMore
+            ),
+            SequentialCommandGroup(
+                Intake.start,
+                IntakeSensor.BlockUntilDetectedNoWatchdog(),
+                Intake.stop,
+            ),
+
+            Constants.drive.followTrajectory(TrajectoryFactory.highBasketToCenterSample)
+        )
+
+    val highBasketScoreToIntakeLeft: Command
+        get() = ParallelCommandGroup(
+            SequentialCommandGroup(
+                IntakePivot.intakePivotUp,
+                IntakeExtension.extensionMiddle,
+                IntakePivot.intakePivotDownMore
+            ),
+            SequentialCommandGroup(
+                Intake.start,
+                IntakeSensor.BlockUntilDetectedNoWatchdog(),
+                Intake.stop,
+            ),
+
+            Constants.drive.followTrajectory(TrajectoryFactory.highBasketToLeftSample)
+        )
+
+    val inToTransfer: Command
+        get() = SequentialCommandGroup(
+            ParallelCommandGroup(
+                IntakePivot.intakePivotUp,
+                Lift.aLittleHigh,
+                Claw.open,
+                SequentialCommandGroup(
+                    Delay(0.5),
+                    Arm.toIntakePos
+                )
+            ),
+            IntakeExtension.extensionIn,
+            IntakePivot.intakePivotTransfer,
+            Lift.toIntake,
+            Claw.close
+        )
+
+    val rightSampleToHighScore: Command
+        get() = SequentialCommandGroup(
+            ParallelCommandGroup(
+                SequentialCommandGroup(
+                    inToTransfer,
+                    ParallelCommandGroup(
+                        SequentialCommandGroup(
+                            IntakeExtension.extensionSlightlyOut,
+                            IntakeExtension.extensionIn
+                        ),
+                        Lift.toHigh,
+                        SequentialCommandGroup(
+                            Delay(0.5),
+                            Intake.reverse,
+                            Arm.toScorePos
+                        )
+                    )
+                ),
+                Constants.drive.followTrajectory(TrajectoryFactory.rightSampleToHighBasket)
+            ),
+            Intake.stop
+        )
+
+    val centerSampleToHighScore: Command
+        get() = SequentialCommandGroup(
+            ParallelCommandGroup(
+                SequentialCommandGroup(
+                    inToTransfer,
+                    ParallelCommandGroup(
+                        SequentialCommandGroup(
+                            IntakeExtension.extensionSlightlyOut,
+                            IntakeExtension.extensionIn
+                        ),
+                        Lift.toHigh,
+                        SequentialCommandGroup(
+                            Delay(0.5),
+                            Arm.toScorePos,
+                            Intake.reverse
+                        )
+                    )
+                ),
+                Constants.drive.followTrajectory(TrajectoryFactory.centerSampleToHighBasket)
+            ),
+            Intake.stop
+        )
+
+    val leftSampleToHighScore: Command
+        get() = SequentialCommandGroup(
+            ParallelCommandGroup(
+                SequentialCommandGroup(
+                    inToTransfer,
+                    ParallelCommandGroup(
+                        SequentialCommandGroup(
+                            IntakeExtension.extensionSlightlyOut,
+                            IntakeExtension.extensionIn
+                        ),
+                        Lift.toHigh,
+                        SequentialCommandGroup(
+                            Delay(0.5),
+                            Arm.toScorePos,
+                            Intake.reverse
+                        )
+                    )
+                ),
+                Constants.drive.followTrajectory(TrajectoryFactory.leftSampleToHighBasket)
+            ),
+            Intake.stop
+        )
+
+    /**
+     * Full routine for single sample w/ ascent park
+     */
+    val singleSampleAscentPark: Command
+        get() = SequentialCommandGroup(
+            leftStartToHighBasketScore,
+            Claw.open,
+            highBasketScoreToAscent,
+            Delay(1.0),
+            StopOpModeCommand()
+        )
+
+    val twoSampleAscentPark: Command
+        get() = SequentialCommandGroup(
+            leftStartToHighBasketScore,
+            scoreToRepeat,
+            highBasketScoreToIntakeRight,
+            ParallelCommandGroup(
+                IntakeSensor.BlockUntilDetected(),
+                Constants.drive.followTrajectory(TrajectoryFactory.pickupRightSample)
+            ),
+            rightSampleToHighScore,
+            Claw.open,
+            highBasketScoreToAscent,
+            Delay(1.0),
+            StopOpModeCommand()
+        )
+
+    val threeSampleAscentPark: Command
+        get() = SequentialCommandGroup(
+            leftStartToHighBasketScore,
+            scoreToRepeat,
+            highBasketScoreToIntakeRight,
+            ParallelCommandGroup(
+                IntakeSensor.BlockUntilDetected(),
+                Constants.drive.followTrajectory(TrajectoryFactory.pickupRightSample)
+            ),
+            rightSampleToHighScore,
+            scoreToRepeat,
+            highBasketScoreToIntakeCenter,
+            ParallelCommandGroup(
+                IntakeSensor.BlockUntilDetected(),
+                Constants.drive.followTrajectory(TrajectoryFactory.pickupCenterSample)
+            ),
+            centerSampleToHighScore,
+            Claw.open,
+            highBasketScoreToAscent,
+            Delay(1.0),
+            StopOpModeCommand()
+        )
+
+    val fourSampleAscentPark: Command
+        get() = SequentialCommandGroup(
+            leftStartToHighBasketScore,
+            Claw.open,
+            ParallelCommandGroup(
+                scoreToRepeat,
+                highBasketScoreToIntakeRight,
+                IntakeSensor.BlockUntilDetected(),
+                SequentialCommandGroup(
+                    Delay(1.25),
+                    Constants.drive.followTrajectory(TrajectoryFactory.pickupRightSample)
+                )
+            ),
+            rightSampleToHighScore,
+            Claw.open,
+            ParallelCommandGroup(
+                scoreToRepeat,
+                highBasketScoreToIntakeCenter,
+                IntakeSensor.BlockUntilDetected(),
+                SequentialCommandGroup(
+                    Delay(1.25),
+                    Constants.drive.followTrajectory(TrajectoryFactory.pickupCenterSample)
+                )
+            ),
+            centerSampleToHighScore,
+            Claw.open,
+            ParallelCommandGroup(
+                scoreToRepeat,
+                highBasketScoreToIntakeLeft,
+                IntakeSensor.BlockUntilDetected(1.0),
+                SequentialCommandGroup(
+                    Delay(2.0),
+                    Constants.drive.followTrajectory(TrajectoryFactory.leftSampleToLeftSamplePickup)
+                )
+            ),
+            leftSampleToHighScore,
+            // Final score and park
+            Claw.open,
+            highBasketScoreToAscent,
+            Delay(1.0),
+            StopOpModeCommand()
+        )
+
+}

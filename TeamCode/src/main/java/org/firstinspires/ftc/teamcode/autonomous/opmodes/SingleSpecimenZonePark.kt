@@ -7,6 +7,7 @@ import com.rowanmcalpin.nextftc.driving.drivers.MecanumDrive
 import com.rowanmcalpin.nextftc.driving.localizers.TwoWheelOdometryLocalizer
 import com.rowanmcalpin.nextftc.opmodes.NextFTCOpMode
 import org.firstinspires.ftc.teamcode.autonomous.routines.Routines
+import org.firstinspires.ftc.teamcode.autonomous.routines.SampleRoutines
 import org.firstinspires.ftc.teamcode.autonomous.trajectories.TrajectoryFactory
 import org.firstinspires.ftc.teamcode.drive.DriveConstants
 import org.firstinspires.ftc.teamcode.localization.OdometryConstants
@@ -33,7 +34,7 @@ class SingleSpecimenZonePark: NextFTCOpMode(Arm, Claw, Intake, IntakeExtension, 
     }
 
     override fun onStartButtonPressed() {
-        Routines.singleSampleAscentPark()
+        SampleRoutines.singleSampleAscentPark()
 
     }
 }

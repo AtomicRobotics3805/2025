@@ -16,17 +16,19 @@ fun main() {
             MecanumDrive(
                 DriveConstants,
                 TwoWheelOdometryLocalizer(OdometryConstants)
-            ) { tf.startPosLeft },
+            ) { tf.startPosRight },
             14.0,
             18.0,
             {
                 SequentialCommandGroup(
-                    Constants.drive.followTrajectory(tf.leftStartToHighBasket),
-                    Constants.drive.followTrajectory(tf.highBasketToRightSample),
-                    Constants.drive.followTrajectory(tf.rightSampleToHighBasket),
-                    Constants.drive.followTrajectory(tf.highBasketToCenterSample),
-                    Constants.drive.followTrajectory(tf.centerSampleToHighBasket),
-                    Constants.drive.followTrajectory(tf.highBasketToAscentPark)
+                    Constants.drive.followTrajectory(tf.rightStartToHighChamber1),
+                    Constants.drive.followTrajectory(tf.highChamber1Score),
+                    Constants.drive.followTrajectory(tf.highChamber1ToPark)
+//                    Constants.drive.followTrajectory(tf.highChamber1ToBringLeftSampleToObservationZone),
+//                    Constants.drive.followTrajectory(tf.observationZoneLeftToBringCenterSampleToObservationZone),
+//                    Constants.drive.followTrajectory(tf.observationZoneMiddleToSpecimenPickupPosition),
+//                    Constants.drive.followTrajectory(tf.specimenPickupPositionToHighChamber2),
+//                    Constants.drive.followTrajectory(tf.highChamber2Score)
                 )
             },
             Constants.Color.BLUE

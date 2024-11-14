@@ -19,13 +19,13 @@ import org.firstinspires.ftc.teamcode.mechanisms.IntakeSensor
 import org.firstinspires.ftc.teamcode.mechanisms.Lift
 import org.firstinspires.ftc.teamcode.mechanisms.Lights
 
-@Autonomous(name = "Single Sample Ascent Park")
-class SingleSampleAscentPark: NextFTCOpMode(Arm, Claw, Intake, IntakeExtension, IntakePivot, IntakeSensor, Lift, Lights) {
+@Autonomous(name = "Four Sample Ascent Park")
+class FourSampleAscentPark: NextFTCOpMode(Arm, Claw, Intake, IntakeExtension, IntakePivot, IntakeSensor, Lift, Lights) {
     override val color = Constants.Color.BLUE // Doesn't actually matter, since the field is rotationally symmetrical
     override val trajectoryFactory = TrajectoryFactory
     override val drive = MecanumDrive(DriveConstants,
         TwoWheelOdometryLocalizer(OdometryConstants))
-        { TrajectoryFactory.startPosLeft }
+    { TrajectoryFactory.startPosLeft }
 
     override fun onInit() {
         Routines.autonomousWithSampleInitializationRoutine()
@@ -71,6 +71,6 @@ class SingleSampleAscentPark: NextFTCOpMode(Arm, Claw, Intake, IntakeExtension, 
     }
 
     override fun onStartButtonPressed() {
-        SampleRoutines.singleSampleAscentPark()
+        SampleRoutines.fourSampleAscentPark()
     }
 }

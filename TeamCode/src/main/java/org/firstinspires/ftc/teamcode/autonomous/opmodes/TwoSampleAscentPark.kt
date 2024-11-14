@@ -6,6 +6,7 @@ import com.rowanmcalpin.nextftc.driving.drivers.MecanumDrive
 import com.rowanmcalpin.nextftc.driving.localizers.TwoWheelOdometryLocalizer
 import com.rowanmcalpin.nextftc.opmodes.NextFTCOpMode
 import org.firstinspires.ftc.teamcode.autonomous.routines.Routines
+import org.firstinspires.ftc.teamcode.autonomous.routines.SampleRoutines
 import org.firstinspires.ftc.teamcode.autonomous.trajectories.TrajectoryFactory
 import org.firstinspires.ftc.teamcode.drive.DriveConstants
 import org.firstinspires.ftc.teamcode.localization.OdometryConstants
@@ -70,6 +71,6 @@ class TwoSampleAscentPark: NextFTCOpMode(Arm, Claw, Intake, IntakeExtension, Int
     }
 
     override fun onStartButtonPressed() {
-        Routines.twoSampleAscentPark()
+        SampleRoutines.twoSampleAscentPark()
     }
 }
