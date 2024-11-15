@@ -16,6 +16,8 @@ object IntakeSensor: Subsystem {
 
     var selection = 0 // 1 red, 2 blue, 3 yellow, 0 atomic green, 4 off
 
+    var sampleSelection = 3
+
     var hsv: FloatArray = FloatArray(3);
 
     class DetectColor(): Command() {
@@ -61,6 +63,33 @@ object IntakeSensor: Subsystem {
 
         override fun onStart() {
             watchdog.reset()
+        }
+    }
+
+    public class DetectSampleColor: Command() {
+        override var _isDone = false
+
+        private val timer: ElapsedTime = ElapsedTime()
+        private var lastTimestamp = 0.0
+        private val checkFrequency = 0.5
+
+        override fun onStart() {
+            timer.reset()
+        }
+
+        override fun onExecute() {
+            if (timer.seconds() - lastTimestamp >= checkFrequency) {
+                Color.colorToHSV(sensor.normalizedColors.toColor(), hsv)
+                sampleSelection = if (hsv[0] <= 26) {
+                    1
+                } else if (hsv[0] <= 85) {
+                    3
+                } else {
+                    2
+                }
+                lastTimestamp = timer.seconds()
+            }
+            TestingTeleOp.telemetryData.add(Pair("Detected color", hsv.contentToString()))
         }
     }
 
