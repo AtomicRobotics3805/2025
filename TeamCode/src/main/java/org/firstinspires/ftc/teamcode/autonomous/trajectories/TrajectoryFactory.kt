@@ -47,7 +47,7 @@ object TrajectoryFactory: TrajectoryFactory() {
     //endregion
 
     //region SPECIMENS
-    val submersibleYPos = 36.0
+    val submersibleYPos = 31.0
     val highChamber1 = Pose2d(-10.0, submersibleYPos,  90.rad)
     val highChamber2 = Pose2d(-8.0, submersibleYPos, 90.rad)
     val highChamber3 = Pose2d(-6.0, submersibleYPos, 90.rad)
@@ -143,7 +143,7 @@ object TrajectoryFactory: TrajectoryFactory() {
             .lineTo(Vector2d(highChamber2.x, highChamber2.y - smallDrivingDistance)).build()
 
 
-        highChamber1ToPark = Constants.drive.trajectoryBuilder(highChamber1Score.end())
+        highChamber1ToPark = Constants.drive.trajectoryBuilder(highChamber1)
             .splineToSplineHeading(observationZonePark, 135.rad).build()
     }
 }

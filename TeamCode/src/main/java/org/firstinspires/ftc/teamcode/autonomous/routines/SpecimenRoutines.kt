@@ -11,34 +11,41 @@ import org.firstinspires.ftc.teamcode.autonomous.routines.Routines.scoreToIntake
 import org.firstinspires.ftc.teamcode.autonomous.trajectories.TrajectoryFactory
 import org.firstinspires.ftc.teamcode.mechanisms.Arm
 import org.firstinspires.ftc.teamcode.mechanisms.Claw
+import org.firstinspires.ftc.teamcode.mechanisms.IntakeExtension
 import org.firstinspires.ftc.teamcode.mechanisms.Lift
 
 object SpecimenRoutines {
 
     val rightStartToSpecimenScore: Command
-        get() = SequentialCommandGroup(
-            ParallelCommandGroup(
-                Lift.toSpecimenScoreHigh,
+        get() = ParallelCommandGroup(
+                SequentialCommandGroup(
+                    Delay(0.25),
+                    IntakeExtension.extensionMiddle,
+                    IntakeExtension.extensionIn
+                ),
+                SequentialCommandGroup(
+                    Delay(2.0),
+                    Lift.toAutonSpecimenScoreHigh,
+                ),
                 Constants.drive.followTrajectory(TrajectoryFactory.rightStartToHighChamber1),
-                SequentialCommandGroup(
-                    Delay(0.5),
-                    Arm.toSpecimenPreScorePos
-                )
-            ),
-            ParallelCommandGroup(
-                Constants.drive.followTrajectory(TrajectoryFactory.highChamber1Score),
-                Arm.toSpecimenScorePos,
-                SequentialCommandGroup(
-                    Delay(0.5),
-                    Claw.open
-                )
+                Arm.toScorePos
             )
+
+    val specimenScore1ToBringSamples: Command
+        get() = SequentialCommandGroup(
+
         )
 
     val specimenScore1ToPark: Command
         get() = ParallelCommandGroup(
-            scoreToBottom,
-            Constants.drive.followTrajectory(TrajectoryFactory.highChamber1ToPark)
+            SequentialCommandGroup(
+                Constants.drive.followTrajectory(TrajectoryFactory.highChamber1ToPark)
+            ),
+            SequentialCommandGroup(
+                Delay(0.5),
+                Claw.open,
+                scoreToBottom,
+            )
         )
 
     val singleSpecimenWithObservationZonePark: Command
@@ -47,6 +54,11 @@ object SpecimenRoutines {
             specimenScore1ToPark,
             Delay(1.0),
             StopOpModeCommand()
+        )
+
+    val biggerSpecimenAuton: Command
+        get() = SequentialCommandGroup(
+
         )
 
 }

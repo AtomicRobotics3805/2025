@@ -6,7 +6,6 @@ import com.rowanmcalpin.nextftc.Constants
 import com.rowanmcalpin.nextftc.command.Command
 import com.rowanmcalpin.nextftc.hardware.MotorEx
 import com.rowanmcalpin.nextftc.subsystems.Subsystem
-import org.firstinspires.ftc.teamcode.teleop.opmodes.TestingTeleOp.Companion.telemetryData
 import kotlin.math.abs
 import kotlin.math.sign
 

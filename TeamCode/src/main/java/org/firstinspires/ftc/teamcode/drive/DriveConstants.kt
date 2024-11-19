@@ -21,9 +21,9 @@ object DriveConstants: MecanumDriveConstants{
     @JvmField
     var _GEAR_RATIO = 1.0
     @JvmField
-    var _HEADING_PID = PIDCoefficients(8.0, 0.0, 0.0)
+    var _HEADING_PID = PIDCoefficients(0.0, 0.0, 0.0)
     @JvmField
-    var _TRANSLATIONAL_PID = PIDCoefficients(8.0, 0.0, 0.0)
+    var _TRANSLATIONAL_PID = PIDCoefficients(0.0, 0.0, 0.0)
     @JvmField
     var _IS_RUN_USING_ENCODER = false
     @JvmField
@@ -36,21 +36,31 @@ object DriveConstants: MecanumDriveConstants{
     var _RIGHT_FRONT_MOTOR = MotorEx("RF", MotorEx.MotorType.GOBILDA_YELLOWJACKET, 13.7, direction = DcMotorSimple.Direction.FORWARD)
     @JvmField
     var _RIGHT_BACK_MOTOR = MotorEx("RB", MotorEx.MotorType.GOBILDA_YELLOWJACKET, 13.7, direction = DcMotorSimple.Direction.FORWARD)
+
     @JvmField
-    var _MAX_ACCEL = 40.0
+    var _MAX_ANG_ACCEL = 123.7.toRadians
     @JvmField
-    var _MAX_ANG_ACCEL = 60.0.toRadians
-    @JvmField
-    var _MAX_ANG_VEL = 60.0.toRadians
+    var _MAX_ANG_VEL = 123.7.toRadians
+
     // Theoretical max velocity assuming no load on motors: 86.0846416947 in/sec.
     @JvmField
-    var _MAX_VEL = 40.0
+    var _MAX_VEL = 45.0
+    @JvmField
+    var _MAX_ACCEL = 45.0
+
     @JvmField
     var _MAX_RPM = 435.0
+
+    @JvmField
+    var _POV = DriverControlled.POV.FIELD_CENTRIC
+
+    //region Drivewheel encoders, unused
     @JvmField
     var _MOTOR_VEL_PID = PIDFCoefficients(0.0, 0.0, 0.0, getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV))
     @JvmField
-    var _POV = DriverControlled.POV.FIELD_CENTRIC
+    var _TICKS_PER_REV = 24.0 // TO BE REMOVED
+    //endregion
+
     @JvmField
     var _REVERSE_STRAFE = true
     @JvmField
@@ -62,19 +72,17 @@ object DriveConstants: MecanumDriveConstants{
     @JvmField
     var _BACKWARD_DRIFT_MULTIPLIER = 1.0
     @JvmField
-    var _TICKS_PER_REV = 24.0 // TO BE REMOVED
-    @JvmField
-    var _TRACK_WIDTH = 13.070866 // Inches
+    var _TRACK_WIDTH = 11.125 // Inches
     @JvmField
     var _WHEEL_RADIUS = 1.889765 // Inches
     @JvmField
     var _VERTICAL_AXIS = AxisDirection.POS_Z
     @JvmField
-    var _kA = 0.0051
+    var _kA = 0.005
     @JvmField
     var _kStatic = 0.0
     @JvmField
-    var _kV = 0.015
+    var _kV = 0.0125
 
     //region Backend
     override val BACKWARD_DRIFT_MULTIPLIER: Double

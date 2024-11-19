@@ -12,13 +12,13 @@ object IntakePivot: Subsystem {
     val intakePivotServo = ServoEx(name)
 
     @JvmField
-    var downPos = 0.5
+    var downPos = 0.8
     @JvmField
-    var downMorePos = 0.572
+    var downMorePos = 0.9
     @JvmField
-    var upPos = 0.535
+    var upPos = 0.65 // Horizontal
     @JvmField
-    var transferPos = 0.527
+    var transferPos = 0.6 // Up more for transfer
 
     val intakePivotDown: Command
         get() = MoveServo(intakePivotServo, downPos, 0.5, listOf(this@IntakePivot))

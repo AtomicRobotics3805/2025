@@ -4,6 +4,7 @@ import android.graphics.Color
 import com.qualcomm.hardware.rev.RevColorSensorV3
 import com.qualcomm.robotcore.util.ElapsedTime
 import com.rowanmcalpin.nextftc.Constants
+import com.rowanmcalpin.nextftc.TelemetryController
 import com.rowanmcalpin.nextftc.command.Command
 import com.rowanmcalpin.nextftc.subsystems.Subsystem
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
@@ -49,7 +50,7 @@ object IntakeSensor: Subsystem {
                 }
                 lastTimestamp = timer.seconds()
             }
-            TestingTeleOp.telemetryData.add(Pair("Detected color", hsv.contentToString()))
+
         }
     }
 

@@ -15,7 +15,7 @@
             <goBILDA5202SeriesMotor name="LF" port="2" />
             <goBILDA5202SeriesMotor name="LB" port="3" />
             <Servo name="intake" port="0" />
-            <Servo name="intake2" port="1" />
+            <Servo name="intake2" port="4" />
             <Servo name="intake_pivot" port="2" />
             <LynxEmbeddedIMU name="imu" port="0" bus="0" />
             <RevColorSensorV3 name="intake_sensor" port="0" bus="1" />
