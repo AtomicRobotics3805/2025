@@ -15,17 +15,17 @@ object Arm: Subsystem {
     val armServo = ServoEx(name)
 
     @JvmField
-    var intakePos = 0.027
+    var intakePos = 0.05
     @JvmField
-    var scorePos = 0.647
+    var scorePos = 0.69
     @JvmField
-    var ascentOnePos = 0.6
+    var ascentOnePos = 0.69
     @JvmField
-    var specimenPickupPos = 0.83
+    var specimenPickupPos = 0.97
     @JvmField
-    var specimenPreScorePose = 0.7
+    var specimenPreScorePose = 0.69
     @JvmField
-    var specimenScorePos = 0.908
+    var specimenScorePos = 0.69
 
 
     val toIntakePos: Command

@@ -12,7 +12,7 @@ object IntakePivot: Subsystem {
     val intakePivotServo = ServoEx(name)
 
     @JvmField
-    var downPos = 0.8
+    var downPos = 0.9
     @JvmField
     var downMorePos = 0.9
     @JvmField

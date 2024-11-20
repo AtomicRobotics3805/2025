@@ -6,6 +6,7 @@ import com.rowanmcalpin.nextftc.Constants
 import com.rowanmcalpin.nextftc.trajectories.ParallelTrajectory
 import com.rowanmcalpin.nextftc.trajectories.TrajectoryFactory
 import com.rowanmcalpin.nextftc.trajectories.rad
+import org.firstinspires.ftc.robotcore.external.Const
 
 object TrajectoryFactory: TrajectoryFactory() {
     // Starting positions
@@ -56,25 +57,27 @@ object TrajectoryFactory: TrajectoryFactory() {
     val observationZoneYPos = 55.0
     val transitPos1 = Pose2d(-36.0, 36.0, 270.rad)
     val transitPos2 = Pose2d(-36.0, 16.0, 270.rad)
-    val leftColoredSample = Pose2d(-48.0, 16.0, 270.rad)
+    val leftColoredSample = Pose2d(-48.0, 8.0, 270.rad)
     val observationZoneLeft = Pose2d(-48.0, observationZoneYPos, 270.rad)
 
-    val centerColoredSample = Pose2d(-57.5, 16.0, 270.rad)
+    val centerColoredSample = Pose2d(-57.5, 8.0, 270.rad)
     val observationZoneMiddle = Pose2d(-57.5, observationZoneYPos, 270.rad)
 
     val prepatorySpecimenPickupPos = Pose2d(-40.0, 53.0, 270.rad)
-    val specimenPickupPosition = Pose2d(-40.0, 65.0, 270.rad)
+    val specimenPickupPosition = Pose2d(-38.0, 62.0, 270.rad)
 
     lateinit var rightStartToHighChamber1: ParallelTrajectory
     lateinit var highChamber1ToBringLeftSampleToObservationZone: ParallelTrajectory
+    lateinit var firstSampleBringingSecondPart: ParallelTrajectory
     lateinit var observationZoneLeftToBringCenterSampleToObservationZone: ParallelTrajectory
+    lateinit var secondSampleBringingSecondPart: ParallelTrajectory
     lateinit var observationZoneMiddleToSpecimenPickupPosition: ParallelTrajectory
     lateinit var specimenPickupPositionToHighChamber2: ParallelTrajectory
 
     lateinit var highChamber1ToPark: ParallelTrajectory
 
     // Small scoring driving
-    val smallDrivingDistance = 2.0
+    val smallDrivingDistance = 4.0
     lateinit var highChamber1Score: ParallelTrajectory
     lateinit var highChamber2Score: ParallelTrajectory
 
@@ -122,17 +125,20 @@ object TrajectoryFactory: TrajectoryFactory() {
             .splineToLinearHeading(highChamber1, 270.rad).build()
         highChamber1Score = Constants.drive.trajectoryBuilder(highChamber1, 270.rad)
             .lineTo(Vector2d(highChamber1.x, highChamber1.y - smallDrivingDistance)).build()
+
         highChamber1ToBringLeftSampleToObservationZone = Constants.drive.trajectoryBuilder(highChamber1Score.end(), 90.rad)
             .splineToSplineHeading(transitPos1, 270.rad)
             .splineToSplineHeading(transitPos2, 270.rad)
             .splineToConstantHeading(leftColoredSample.vec(), 90.rad)
-            .splineTo(observationZoneLeft.vec(), 90.rad)
             .build()
+        firstSampleBringingSecondPart = Constants.drive.trajectoryBuilder(highChamber1ToBringLeftSampleToObservationZone.end(), 90.rad)
+            .splineTo(observationZoneLeft.vec(), 90.rad).build()
         observationZoneLeftToBringCenterSampleToObservationZone = Constants.drive.trajectoryBuilder(observationZoneLeft, 270.rad)
             .splineTo(leftColoredSample.vec(), 270.rad)
             .splineToConstantHeading(centerColoredSample.vec(), 90.rad)
-            .splineTo(observationZoneMiddle.vec(), 90.rad)
             .build()
+        secondSampleBringingSecondPart = Constants.drive.trajectoryBuilder(observationZoneLeftToBringCenterSampleToObservationZone.end(), 90.rad)
+            .splineTo(observationZoneMiddle.vec(), 90.rad).build()
         observationZoneMiddleToSpecimenPickupPosition = Constants.drive.trajectoryBuilder(observationZoneMiddle, 270.rad)
             .splineToConstantHeading(prepatorySpecimenPickupPos.vec(), 90.rad)
             .splineTo(specimenPickupPosition.vec(), 90.rad)

@@ -29,7 +29,7 @@ object SampleRoutines {
             ),
             Lift.toHigh,
             SequentialCommandGroup(
-                Delay(1.0),
+                Delay(1.5),
                 Arm.toScorePos
             )
         )
@@ -112,8 +112,8 @@ object SampleRoutines {
                         ),
                         Lift.toHigh,
                         SequentialCommandGroup(
-                            Delay(0.5),
                             Intake.reverse,
+                            Delay(1.5),
                             Arm.toScorePos
                         )
                     )
@@ -135,9 +135,9 @@ object SampleRoutines {
                         ),
                         Lift.toHigh,
                         SequentialCommandGroup(
-                            Delay(0.5),
-                            Arm.toScorePos,
-                            Intake.reverse
+                            Intake.reverse,
+                            Delay(1.5),
+                            Arm.toScorePos
                         )
                     )
                 ),
@@ -158,9 +158,9 @@ object SampleRoutines {
                         ),
                         Lift.toHigh,
                         SequentialCommandGroup(
-                            Delay(0.5),
-                            Arm.toScorePos,
-                            Intake.reverse
+                            Intake.reverse,
+                            Delay(2.0),
+                            Arm.toScorePos
                         )
                     )
                 ),

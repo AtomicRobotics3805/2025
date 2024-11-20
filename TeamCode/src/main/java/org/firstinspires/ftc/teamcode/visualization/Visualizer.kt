@@ -23,12 +23,13 @@ fun main() {
                 SequentialCommandGroup(
                     Constants.drive.followTrajectory(tf.rightStartToHighChamber1),
                     Constants.drive.followTrajectory(tf.highChamber1Score),
-                    Constants.drive.followTrajectory(tf.highChamber1ToPark)
-//                    Constants.drive.followTrajectory(tf.highChamber1ToBringLeftSampleToObservationZone),
-//                    Constants.drive.followTrajectory(tf.observationZoneLeftToBringCenterSampleToObservationZone),
-//                    Constants.drive.followTrajectory(tf.observationZoneMiddleToSpecimenPickupPosition),
-//                    Constants.drive.followTrajectory(tf.specimenPickupPositionToHighChamber2),
-//                    Constants.drive.followTrajectory(tf.highChamber2Score)
+                    Constants.drive.followTrajectory(tf.highChamber1ToBringLeftSampleToObservationZone),
+                    Constants.drive.followTrajectory(tf.firstSampleBringingSecondPart),
+                    Constants.drive.followTrajectory(tf.observationZoneLeftToBringCenterSampleToObservationZone),
+                    Constants.drive.followTrajectory(tf.secondSampleBringingSecondPart),
+                    Constants.drive.followTrajectory(tf.observationZoneMiddleToSpecimenPickupPosition),
+                    Constants.drive.followTrajectory(tf.specimenPickupPositionToHighChamber2),
+                    Constants.drive.followTrajectory(tf.highChamber2Score)
                 )
             },
             Constants.Color.BLUE

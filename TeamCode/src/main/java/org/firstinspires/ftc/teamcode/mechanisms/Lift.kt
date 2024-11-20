@@ -29,15 +29,15 @@ object Lift: Subsystem {
     @JvmField
     var intakePos = -1.0 // Inches // TODO
     @JvmField
-    var specimenPickup = 3.0 // Inches // TODO
+    var specimenPickup = 1.75 // Inches // TODO
     @JvmField
     var highPos = 24.0 // Inches // TODO
     @JvmField
     var aLittleHighPos = 3.0 // Inches // TODO
     @JvmField
-    var specimenScoreHigh = 12.0 // Inches // TODO
+    var specimenScoreHigh = 5.0 // Inches // TODO
     @JvmField
-    var specimenAutoScoreHigh = 4.0 // Inches // TODO
+    var specimenAutoScoreHigh = 4.4 // Inches // TODO
 
     @JvmField
     var maxSpeed = 1.0

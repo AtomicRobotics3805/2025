@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.autonomous.routines
 import com.rowanmcalpin.nextftc.command.Command
 import com.rowanmcalpin.nextftc.command.groups.ParallelCommandGroup
 import com.rowanmcalpin.nextftc.command.groups.SequentialCommandGroup
+import com.rowanmcalpin.nextftc.subsystems.DisplayRobot
 import org.firstinspires.ftc.teamcode.mechanisms.Arm
 import org.firstinspires.ftc.teamcode.mechanisms.Claw
 import org.firstinspires.ftc.teamcode.mechanisms.IntakeExtension
@@ -26,7 +27,9 @@ object Routines {
             ),
 
             IntakeExtension.zero,
-            Lights.DisplayColor()
+            Lights.DisplayColor(),
+
+            DisplayRobot()
         )
 
     val autonomousWithSpecimenInitializationRoutine: Command
@@ -41,7 +44,9 @@ object Routines {
             ),
 
             IntakeExtension.zero,
-            Lights.DisplayColor()
+            Lights.DisplayColor(),
+
+            DisplayRobot()
         )
 
     val scoreToIntake: Command
@@ -59,6 +64,15 @@ object Routines {
             ParallelCommandGroup(
                 Arm.toIntakePos,
                 Lift.toIntake
+            )
+        )
+
+    val scoreToSpecPickup: Command
+        get() = SequentialCommandGroup(
+            Claw.open,
+            ParallelCommandGroup(
+                Arm.toSpecimenPickupPos,
+                Lift.toSpecimenPickup
             )
         )
 }

@@ -21,9 +21,9 @@ object DriveConstants: MecanumDriveConstants{
     @JvmField
     var _GEAR_RATIO = 1.0
     @JvmField
-    var _HEADING_PID = PIDCoefficients(0.0, 0.0, 0.0)
+    var _HEADING_PID = PIDCoefficients(8.0, 0.0, 0.0)
     @JvmField
-    var _TRANSLATIONAL_PID = PIDCoefficients(0.0, 0.0, 0.0)
+    var _TRANSLATIONAL_PID = PIDCoefficients(8.0, 0.0, 0.0)
     @JvmField
     var _IS_RUN_USING_ENCODER = false
     @JvmField

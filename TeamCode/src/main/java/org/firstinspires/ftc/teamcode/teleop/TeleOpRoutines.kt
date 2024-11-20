@@ -61,7 +61,10 @@ object TeleOpRoutines {
                 IntakeExtension.extensionSlightlyOut,
                 IntakeExtension.extensionIn
             ),
-            Arm.toScorePos,
+            SequentialCommandGroup(
+                Delay(1.5),
+                Arm.toScorePos
+            ),
             Lift.toHigh,
             IntakePivot.intakePivotUp
         )
