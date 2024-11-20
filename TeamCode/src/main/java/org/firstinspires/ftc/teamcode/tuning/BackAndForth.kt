@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.tuning
 import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.rowanmcalpin.nextftc.Constants
 import com.rowanmcalpin.nextftc.TelemetryController
@@ -19,6 +20,7 @@ import org.firstinspires.ftc.teamcode.localization.OdometryConstants
 
 @Config
 @Autonomous(group = "drive")
+@Disabled
 class BackAndForth : LinearOpMode() {
 
     private lateinit var trajectoryForward: ParallelTrajectory

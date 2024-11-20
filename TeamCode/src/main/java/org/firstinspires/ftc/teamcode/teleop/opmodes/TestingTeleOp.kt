@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleop.opmodes
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.rowanmcalpin.nextftc.Constants
 import com.rowanmcalpin.nextftc.TelemetryController
@@ -24,6 +25,7 @@ import org.firstinspires.ftc.teamcode.mechanisms.Lift
 import org.firstinspires.ftc.teamcode.mechanisms.Lights
 
 @TeleOp(name="Testing TeleOp")
+@Disabled
 class TestingTeleOp: NextFTCOpMode(Arm, Claw, Intake, IntakeExtension, IntakePivot, Lift, Lights, IntakeSensor) {
     override val controls: Controls = org.firstinspires.ftc.teamcode.teleop.Controls()
     override val drive = MecanumDrive(DriveConstants, TwoWheelOdometryLocalizer(OdometryConstants), { Pose2d(0.0, 0.0, 90.rad) })

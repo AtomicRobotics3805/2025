@@ -226,57 +226,42 @@ object SampleRoutines {
             Claw.open,
             ParallelCommandGroup(
                 scoreToIntake,
-                ParallelCommandGroup(
-                    ParallelCommandGroup(
-                        highBasketScoreToIntakeRight,
-                        SequentialCommandGroup(
-                            IntakeSensor.BlockUntilDetectedNoWatchdog(),
-                            Intake.stop
-                        )
-                    ),
+                highBasketScoreToIntakeRight,
+                SequentialCommandGroup(
                     IntakeSensor.BlockUntilDetected(),
-                    SequentialCommandGroup(
-                        Delay(1.25),
-                        Constants.drive.followTrajectory(TrajectoryFactory.pickupRightSample)
-                    )
+                    Intake.stop
+                ),
+                SequentialCommandGroup(
+                    Delay(1.25),
+                    Constants.drive.followTrajectory(TrajectoryFactory.pickupRightSample)
                 )
             ),
             rightSampleToHighScore,
             Claw.open,
             ParallelCommandGroup(
                 scoreToIntake,
-                ParallelCommandGroup(
-                    ParallelCommandGroup(
-                        highBasketScoreToIntakeCenter,
-                        SequentialCommandGroup(
-                            IntakeSensor.BlockUntilDetectedNoWatchdog(),
-                            Intake.stop
-                        )
-                    ),
+                highBasketScoreToIntakeCenter,
+                SequentialCommandGroup(
                     IntakeSensor.BlockUntilDetected(),
-                    SequentialCommandGroup(
-                        Delay(1.25),
-                        Constants.drive.followTrajectory(TrajectoryFactory.pickupCenterSample)
-                    )
+                    Intake.stop
+                ),
+                SequentialCommandGroup(
+                    Delay(1.25),
+                    Constants.drive.followTrajectory(TrajectoryFactory.pickupCenterSample)
                 )
             ),
             centerSampleToHighScore,
             Claw.open,
             ParallelCommandGroup(
                 scoreToIntake,
-                ParallelCommandGroup(
-                    ParallelCommandGroup(
-                        highBasketScoreToIntakeLeft,
-                        SequentialCommandGroup(
-                            IntakeSensor.BlockUntilDetectedNoWatchdog(),
-                            Intake.stop
-                        )
-                    ),
+                highBasketScoreToIntakeLeft,
+                SequentialCommandGroup(
                     IntakeSensor.BlockUntilDetected(),
-                    SequentialCommandGroup(
-                        Delay(1.25),
-                        Constants.drive.followTrajectory(TrajectoryFactory.leftSampleToLeftSamplePickup)
-                    )
+                    Intake.stop
+                ),
+                SequentialCommandGroup(
+                    Delay(1.25),
+                    Constants.drive.followTrajectory(TrajectoryFactory.leftSampleToLeftSamplePickup)
                 )
             ),
             leftSampleToHighScore,

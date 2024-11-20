@@ -2,9 +2,11 @@ package org.firstinspires.ftc.teamcode.autonomous.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.rowanmcalpin.nextftc.Constants
+import com.rowanmcalpin.nextftc.TelemetryController
 import com.rowanmcalpin.nextftc.driving.drivers.MecanumDrive
 import com.rowanmcalpin.nextftc.driving.localizers.TwoWheelOdometryLocalizer
 import com.rowanmcalpin.nextftc.opmodes.NextFTCOpMode
+import com.rowanmcalpin.nextftc.subsystems.DisplayRobot
 import org.firstinspires.ftc.teamcode.autonomous.routines.Routines
 import org.firstinspires.ftc.teamcode.autonomous.routines.SampleRoutines
 import org.firstinspires.ftc.teamcode.autonomous.trajectories.TrajectoryFactory
@@ -21,53 +23,34 @@ import org.firstinspires.ftc.teamcode.mechanisms.Lights
 
 @Autonomous(name = "Four Sample Ascent Park")
 class FourSampleAscentPark: NextFTCOpMode(Arm, Claw, Intake, IntakeExtension, IntakePivot, IntakeSensor, Lift, Lights) {
-    override val color = Constants.Color.BLUE // Doesn't actually matter, since the field is rotationally symmetrical
+    override val color = Constants.Color.UNKNOWN
+
     override val trajectoryFactory = TrajectoryFactory
+
     override val drive = MecanumDrive(DriveConstants,
         TwoWheelOdometryLocalizer(OdometryConstants))
     { TrajectoryFactory.startPosLeft }
 
     override fun onInit() {
         Routines.autonomousWithSampleInitializationRoutine()
-        telemetryData.add(Pair("Lift position", Lift.motor1.currentPosition))
-        telemetryData.add(Pair("Lift target", Lift.LiftControl.targetPosition))
-        telemetryData.add(Pair("Lift power", Lift.motor1.power))
-        telemetryData.add(Pair("IntakeExtension", IntakeExtension.motor.currentPosition))
-        telemetryData.add(Pair("Intake Extension target", IntakeExtension.IntakeExtensionControl.targetPosition))
-        telemetryData.add(Pair("Drive", drive.getWheelVelocities()))
-        updateOurTelemetry()
+        DisplayRobot()()
+        TelemetryController.telemetry.addData("Lift position 1", Lift.motor1.currentPosition)
+        TelemetryController.telemetry.addData("Lift position 2", Lift.motor1.currentPosition)
+        TelemetryController.telemetry.addData("Lift power 1", Lift.motor1.power)
+        TelemetryController.telemetry.addData("Lift power 2", Lift.motor2.power)
+        TelemetryController.telemetry.addData("Lift target", Lift.LiftControl.targetPosition)
+        TelemetryController.telemetry.addData("Intake extension position", IntakeExtension.motor.currentPosition)
+        TelemetryController.telemetry.addData("Intake extension target", IntakeExtension.IntakeExtensionControl.targetPosition)
     }
 
     override fun onUpdate() {
-        telemetryData.add(Pair("Lift position", Lift.motor1.currentPosition))
-        telemetryData.add(Pair("Lift target", Lift.LiftControl.targetPosition))
-        telemetryData.add(Pair("Lift power", Lift.motor1.power))
-        telemetryData.add(Pair("IntakeExtension", IntakeExtension.motor.currentPosition))
-        telemetryData.add(Pair("Intake Extension target", IntakeExtension.IntakeExtensionControl.targetPosition))
-        telemetryData.add(Pair("Drive", drive.getWheelVelocities()))
-        updateOurTelemetry()
-//        var driveP = -gamepad1.left_stick_y
-//        var strafe = gamepad1.left_stick_x
-//        var turn = gamepad1.right_stick_x
-//        var denominator = Math.max(Math.abs(driveP).toDouble() + Math.abs(strafe).toDouble() + Math.abs(turn).toDouble(), 1.0)
-//        lf.power = (driveP + strafe + turn) / denominator
-//        lb.power = (driveP - strafe + turn) / denominator
-//        rf.power = (driveP - strafe - turn) / denominator
-//        rb.power = (driveP + strafe - turn) / denominator
-    }
-
-    companion object {
-        public var telemetryData: MutableList<Pair<String, Any>> = mutableListOf()
-    }
-
-    fun updateOurTelemetry() {
-        telemetryData.forEach {
-            super.telemetry.addData(it.first, it.second)
-        }
-
-        super.telemetry.update()
-
-        telemetryData.clear()
+        TelemetryController.telemetry.addData("Lift position 1", Lift.motor1.currentPosition)
+        TelemetryController.telemetry.addData("Lift position 2", Lift.motor1.currentPosition)
+        TelemetryController.telemetry.addData("Lift power 1", Lift.motor1.power)
+        TelemetryController.telemetry.addData("Lift power 2", Lift.motor2.power)
+        TelemetryController.telemetry.addData("Lift target", Lift.LiftControl.targetPosition)
+        TelemetryController.telemetry.addData("Intake extension position", IntakeExtension.motor.currentPosition)
+        TelemetryController.telemetry.addData("Intake extension target", IntakeExtension.IntakeExtensionControl.targetPosition)
     }
 
     override fun onStartButtonPressed() {
