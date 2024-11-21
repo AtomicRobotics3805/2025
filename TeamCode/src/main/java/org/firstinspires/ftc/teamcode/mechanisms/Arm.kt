@@ -35,7 +35,7 @@ object Arm: Subsystem {
     val toScorePos: Command
         get() = MoveServo(armServo, scorePos, 1.0, listOf(this@Arm))
     val toSpecimenPickupPos: Command
-        get() = MoveServo(armServo, specimenPickupPos, 1.0, listOf(this@Arm))
+        get() = MoveServo(armServo, specimenPickupPos, 0.0, listOf(this@Arm))
     val toSpecimenPreScorePos: Command
         get() = MoveServo(armServo, specimenPreScorePose, 1.0, listOf(this@Arm))
     val toSpecimenScorePos: Command

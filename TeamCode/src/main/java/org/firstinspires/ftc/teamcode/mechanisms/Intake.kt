@@ -21,7 +21,7 @@ object Intake: Subsystem { // NOT DONE
     @JvmField
     var name2 = "intake2"
     @JvmField
-    var speed = -0.9
+    var speed = -0.8
 
     val servo: CRServoEx = CRServoEx(name)
     val servo2: CRServoEx = CRServoEx(name2, CRServoEx.Direction.REVERSE)

@@ -21,13 +21,17 @@ object SpecimenRoutines {
     val rightStartToFirstSpec: Command
         get() = ParallelCommandGroup(
             SequentialCommandGroup(
+                Delay(0.2),
                 Constants.drive.followTrajectory(TrajectoryFactory.rightStartToHighChamber1),
-                Claw.open
             ),
             SequentialCommandGroup(
+                Delay(1.25),
+                Claw.open
+            ),
+            Lift.toFirstSpecimenAuton,
+            Arm.toSpecimenScorePos,
+            SequentialCommandGroup(
                 IntakeExtension.extensionMiddle,
-                Lift.toAutonSpecimenScoreHigh,
-                Arm.toSpecimenScorePos,
                 IntakeExtension.extensionIn
             )
         )
@@ -35,11 +39,9 @@ object SpecimenRoutines {
     val firstSpecToPushFirstSample: Command
         get() = ParallelCommandGroup(
             Constants.drive.followTrajectory(TrajectoryFactory.highChamber1ToBringLeftSampleToObservationZone),
-            SequentialCommandGroup(
-                Delay(1.0),
-                Lift.toSpecimenPickup,
-                Claw.specimenOpen
-            )
+            Arm.toSpecimenPickupPos,
+            Lift.toSpecimenPickup,
+            Claw.specimenOpen
         )
 
     val pushFirstSampleToPushSecondSample: Command
@@ -55,16 +57,17 @@ object SpecimenRoutines {
 
     val secondSpec: Command
         get() = ParallelCommandGroup(
+            Constants.drive.followTrajectory(TrajectoryFactory.specimenPickupPositionToHighChamber2),
             SequentialCommandGroup(
-                Constants.drive.followTrajectory(TrajectoryFactory.specimenPickupPositionToHighChamber2),
-                Claw.open
+                Delay(2.9),
+                ParallelCommandGroup(
+                    Claw.open,
+                    Arm.toSpecimenPickupPos
+                )
             ),
-            SequentialCommandGroup(
-                IntakeExtension.extensionMiddle,
-                Lift.toAutonSpecimenScoreHigh,
-                Arm.toSpecimenScorePos,
-                IntakeExtension.extensionIn
-            )
+            Lift.toAutonSpecimenScoreHigh,
+            Arm.toSpecimenScorePos,
+            IntakeExtension.extensionIn
         )
 
     val secondSpecToGrabThirdSpec: Command
@@ -82,16 +85,13 @@ object SpecimenRoutines {
 
     val thirdSpec: Command
         get() = ParallelCommandGroup(
+            Constants.drive.followTrajectory(TrajectoryFactory.specimenPickupPositionToHighChamber3),
             SequentialCommandGroup(
-                Constants.drive.followTrajectory(TrajectoryFactory.specimenPickupPositionToHighChamber3),
+                Delay(2.9),
                 Claw.open
             ),
-            SequentialCommandGroup(
-                IntakeExtension.extensionMiddle,
-                Lift.toAutonSpecimenScoreHigh,
-                Arm.toSpecimenScorePos,
-                IntakeExtension.extensionIn
-            )
+            Lift.toAutonSpecimenScoreHigh,
+            Arm.toSpecimenScorePos
         )
 
     val thirdSpecToGrabFourthSpec: Command
@@ -104,20 +104,18 @@ object SpecimenRoutines {
                 Delay(1.0),
                 Lift.toSpecimenPickup,
                 Claw.specimenOpen
-            )
+            ),
+            Arm.toSpecimenPickupPos
         )
     val fourthSpec: Command
         get() = ParallelCommandGroup(
+            Constants.drive.followTrajectory(TrajectoryFactory.specimenPickupPositionToHighChamber4),
             SequentialCommandGroup(
-                Constants.drive.followTrajectory(TrajectoryFactory.specimenPickupPositionToHighChamber4),
+                Delay(2.9),
                 Claw.open
             ),
-            SequentialCommandGroup(
-                IntakeExtension.extensionMiddle,
-                Lift.toAutonSpecimenScoreHigh,
-                Arm.toSpecimenScorePos,
-                IntakeExtension.extensionIn
-            )
+            Lift.toAutonSpecimenScoreHigh,
+            Arm.toSpecimenScorePos
         )
 
     val thirdSpecToPark: Command

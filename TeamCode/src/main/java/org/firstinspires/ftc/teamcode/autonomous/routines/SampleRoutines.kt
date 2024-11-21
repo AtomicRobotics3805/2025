@@ -226,42 +226,39 @@ object SampleRoutines {
             Claw.open,
             ParallelCommandGroup(
                 scoreToIntake,
+                Intake.start,
                 highBasketScoreToIntakeRight,
                 SequentialCommandGroup(
+                    Delay(1.25),
+                    Constants.drive.followTrajectory(TrajectoryFactory.pickupRightSample),
                     IntakeSensor.BlockUntilDetected(),
                     Intake.stop
-                ),
-                SequentialCommandGroup(
-                    Delay(1.25),
-                    Constants.drive.followTrajectory(TrajectoryFactory.pickupRightSample)
                 )
             ),
             rightSampleToHighScore,
             Claw.open,
             ParallelCommandGroup(
                 scoreToIntake,
-                highBasketScoreToIntakeCenter,
-                SequentialCommandGroup(
-                    IntakeSensor.BlockUntilDetected(),
-                    Intake.stop
-                ),
+                Intake.start,
+                highBasketScoreToIntakeRight,
                 SequentialCommandGroup(
                     Delay(1.25),
-                    Constants.drive.followTrajectory(TrajectoryFactory.pickupCenterSample)
+                    Constants.drive.followTrajectory(TrajectoryFactory.pickupCenterSample),
+                    IntakeSensor.BlockUntilDetected(),
+                    Intake.stop
                 )
             ),
             centerSampleToHighScore,
             Claw.open,
             ParallelCommandGroup(
                 scoreToIntake,
+                Intake.start,
                 highBasketScoreToIntakeLeft,
                 SequentialCommandGroup(
+                    Delay(1.25),
+                    Constants.drive.followTrajectory(TrajectoryFactory.leftSampleToLeftSamplePickup),
                     IntakeSensor.BlockUntilDetected(),
                     Intake.stop
-                ),
-                SequentialCommandGroup(
-                    Delay(1.25),
-                    Constants.drive.followTrajectory(TrajectoryFactory.leftSampleToLeftSamplePickup)
                 )
             ),
             leftSampleToHighScore,

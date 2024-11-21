@@ -6,6 +6,7 @@ import com.rowanmcalpin.nextftc.command.groups.SequentialCommandGroup
 import com.rowanmcalpin.nextftc.subsystems.DisplayRobot
 import org.firstinspires.ftc.teamcode.mechanisms.Arm
 import org.firstinspires.ftc.teamcode.mechanisms.Claw
+import org.firstinspires.ftc.teamcode.mechanisms.Intake
 import org.firstinspires.ftc.teamcode.mechanisms.IntakeExtension
 import org.firstinspires.ftc.teamcode.mechanisms.IntakePivot
 import org.firstinspires.ftc.teamcode.mechanisms.Lift
@@ -55,7 +56,8 @@ object Routines {
             ParallelCommandGroup(
                 Arm.toIntakePos,
                 Lift.aLittleHigh
-            )
+            ),
+            Intake.start
         )
 
     val scoreToBottom: Command
