@@ -44,9 +44,9 @@ object DriveConstants: MecanumDriveConstants{
 
     // Theoretical max velocity assuming no load on motors: 86.0846416947 in/sec.
     @JvmField
-    var _MAX_VEL = 45.0
+    var _MAX_VEL = 56.0
     @JvmField
-    var _MAX_ACCEL = 45.0
+    var _MAX_ACCEL = 56.0
 
     @JvmField
     var _MAX_RPM = 435.0
@@ -69,7 +69,6 @@ object DriveConstants: MecanumDriveConstants{
     var _REVERSE_TURN = true
     @JvmField
     var _RIGHT_DRIFT_MULTIPLIER = 1.0
-    @JvmField
     var _BACKWARD_DRIFT_MULTIPLIER = 1.0
     @JvmField
     var _TRACK_WIDTH = 11.125 // Inches

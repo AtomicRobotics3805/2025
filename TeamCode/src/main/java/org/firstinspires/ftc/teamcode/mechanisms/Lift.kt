@@ -37,7 +37,9 @@ object Lift: Subsystem {
     @JvmField
     var specimenScoreHigh = 5.0 // Inches // TODO
     @JvmField
-    var specimenAutoScoreHigh = 4.4 // Inches // TODO
+    var specimenAutoScoreHigh = 4.6 // Inches // TODO
+    @JvmField
+    var firstAutonSpecimenScoreHigh = 4.6 // Inches
 
     @JvmField
     var maxSpeed = 1.0
@@ -131,6 +133,15 @@ object Lift: Subsystem {
         get() = CustomCommand(getDone = { LiftControl.withinDistanceOfTarget() }, _start = {
             LiftControl.zeroPower = false
             LiftControl.targetPosition = (highPos * countsPerInch).toInt()
+            LiftControl.commandRunning = true
+        }, _done = {
+            LiftControl.commandRunning = false
+        })
+
+    val toFirstSpecimenAuton: Command
+        get() = CustomCommand(getDone = { LiftControl.withinDistanceOfTarget() }, _start = {
+            LiftControl.zeroPower = false
+            LiftControl.targetPosition = (firstAutonSpecimenScoreHigh * countsPerInch).toInt()
             LiftControl.commandRunning = true
         }, _done = {
             LiftControl.commandRunning = false

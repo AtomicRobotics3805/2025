@@ -33,7 +33,7 @@ object IntakeSensor: Subsystem {
         override fun onExecute() {
             if (timer.seconds() - lastTimestamp >= checkFrequency) {
                 Color.colorToHSV(sensor.normalizedColors.toColor(), hsv)
-                selection = if (sensor.getDistance(DistanceUnit.CM) < 4) {
+                selection = if (sensor.getDistance(DistanceUnit.CM) < 2) {
                     if (hsv[0] <= 26) {
                         1
                     } else if (hsv[0] <= 85) {
@@ -59,7 +59,7 @@ object IntakeSensor: Subsystem {
             get() = false
 
         override fun onExecute() {
-            if (sensor.getDistance(DistanceUnit.CM) < 4) {
+            if (sensor.getDistance(DistanceUnit.CM) < 2) {
                 Intake.stop()
             }
         }
@@ -68,7 +68,7 @@ object IntakeSensor: Subsystem {
     public class BlockUntilDetected(val watchdogThreshold: Double = 2.0): Command() {
         private val watchdog = ElapsedTime()
         override val _isDone
-            get() = sensor.getDistance(DistanceUnit.CM) < 4 || watchdog.seconds() > watchdogThreshold
+            get() = sensor.getDistance(DistanceUnit.CM) < 2 || watchdog.seconds() > watchdogThreshold
 
         override fun onStart() {
             watchdog.reset()
@@ -77,7 +77,7 @@ object IntakeSensor: Subsystem {
 
     public class BlockUntilDetectedNoWatchdog(): Command() {
         override val _isDone
-            get() = sensor.getDistance(DistanceUnit.CM) < 4
+            get() = sensor.getDistance(DistanceUnit.CM) < 2
     }
 
     override fun initialize() {
