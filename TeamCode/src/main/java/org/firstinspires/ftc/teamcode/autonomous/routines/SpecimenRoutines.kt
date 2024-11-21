@@ -120,6 +120,20 @@ object SpecimenRoutines {
             )
         )
 
+    val thirdSpecToPark: Command
+        get() = ParallelCommandGroup(
+            Constants.drive.followTrajectory(TrajectoryFactory.highChamber3ToPark),
+            IntakeExtension.extensionIn,
+            SequentialCommandGroup(
+                Claw.open,
+                ParallelCommandGroup(
+                    Arm.toIntakePos,
+                    Lift.toIntake
+                ),
+                IntakeExtension.zero
+            )
+        )
+
     val fourthSpecToPark: Command
         get() = ParallelCommandGroup(
             Constants.drive.followTrajectory(TrajectoryFactory.highChamber4ToPark),
@@ -134,6 +148,7 @@ object SpecimenRoutines {
             )
         )
 
+
     val fourSpecimenPlusPark: Command
         get() = SequentialCommandGroup(
             rightStartToFirstSpec,
@@ -146,6 +161,19 @@ object SpecimenRoutines {
             thirdSpecToGrabFourthSpec,
             fourthSpec,
             fourthSpecToPark,
+            StopOpModeCommand()
+        )
+
+    val threeSpecimenPlusPark: Command
+        get() = SequentialCommandGroup(
+            rightStartToFirstSpec,
+            firstSpecToPushFirstSample,
+            pushFirstSampleToPushSecondSample,
+            pushSecondSampleToGrabSecondSpec,
+            secondSpec,
+            secondSpecToGrabThirdSpec,
+            thirdSpec,
+            thirdSpecToPark,
             StopOpModeCommand()
         )
 

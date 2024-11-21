@@ -78,6 +78,7 @@ object TrajectoryFactory: TrajectoryFactory() {
     lateinit var highChamber3ToSpecimenPickupPosition: ParallelTrajectory
     lateinit var specimenPickupPositionToHighChamber4: ParallelTrajectory
 
+    lateinit var highChamber3ToPark: ParallelTrajectory
     lateinit var highChamber4ToPark: ParallelTrajectory
 
     lateinit var highChamber1ToPark: ParallelTrajectory
@@ -153,6 +154,9 @@ object TrajectoryFactory: TrajectoryFactory() {
 
 
         highChamber1ToPark = Constants.drive.trajectoryBuilder(highChamber1)
+            .splineToSplineHeading(observationZonePark, 135.rad).build()
+
+        highChamber3ToPark = Constants.drive.trajectoryBuilder(highChamber3)
             .splineToSplineHeading(observationZonePark, 135.rad).build()
 
         highChamber4ToPark = Constants.drive.trajectoryBuilder(highChamber4)
