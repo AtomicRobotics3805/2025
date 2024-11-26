@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.util.ElapsedTime
+import com.qualcomm.robotcore.util.Range
 import com.rowanmcalpin.nextftc.command.Command
 import com.rowanmcalpin.nextftc.command.groups.SequentialCommandGroup
 import com.rowanmcalpin.nextftc.command.utility.CustomCommand
@@ -30,7 +31,7 @@ object IntakeExtension: Subsystem {
     @JvmField
     var inPos = 69
     @JvmField
-    var outPos = 1200 // TODO
+    var outPos = 1000 // TODO
     @JvmField
     var slightlyOutPos = 300 // TODO
     @JvmField
@@ -90,6 +91,27 @@ object IntakeExtension: Subsystem {
             setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER)
         })
 
+    class Zero: Command() {
+        private var timer = ElapsedTime();
+
+        override val _isDone: Boolean
+            get() = timer.seconds() > 1.0 || Lift.LiftControl.withinDistanceOfTarget()
+
+        override fun onStart() {
+            IntakeExtensionControl.targetPosition = -60
+            IntakeExtensionControl.commandRunning = true
+            timer.reset()
+        }
+
+        override fun onEnd(interrupted: Boolean) {
+            IntakeExtensionControl.commandRunning = false
+            IntakeExtensionControl.useManualControl = true
+            motor.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
+            IntakeExtensionControl.targetPosition = 0
+            IntakeExtensionControl.useManualControl = false
+        }
+    }
+
 
     public class ManualExtensionControl(val stepDistance: Int, val outTrigger: GamepadEx.Trigger, val inTrigger: GamepadEx.Trigger, val period: Double = 0.2): Command() {
         val timer = ElapsedTime()
@@ -105,7 +127,13 @@ object IntakeExtension: Subsystem {
         override fun onExecute() {
             if (timer.seconds() - lastTime >= period) {
                 if (abs(outTrigger.amount) > 0.25f || abs(inTrigger.amount) > 0.25f) {
-                    IntakeExtensionControl.manual((stepDistance * outTrigger.amount * -inTrigger.amount).toInt(), 1)
+                    IntakeExtensionControl.useManualControl = true
+                    motor.mode = DcMotor.RunMode.RUN_USING_ENCODER
+
+                    motor.power = Range.clip((outTrigger.amount + -inTrigger.amount).toDouble(), -1.0, 1.0)
+                } else {
+                    IntakeExtensionControl.targetPosition = motor.currentPosition
+                    IntakeExtensionControl.useManualControl = false
                 }
             }
         }
@@ -124,9 +152,7 @@ object IntakeExtension: Subsystem {
                 return abs(targetPosition - motor.currentPosition) <= 20
             }
 
-            fun manual(stepDistance: Int, direction: Int = 1) {
-                targetPosition += (stepDistance * if(direction!=0) direction.sign else 1)
-            }
+            var useManualControl = false
         }
 
         override fun onStart() {
@@ -134,19 +160,16 @@ object IntakeExtension: Subsystem {
         }
 
         override fun onExecute() {
-            if (abs(targetPosition - cachedPosition) > 10) {
-                motor.targetPosition = targetPosition
-                cachedPosition = targetPosition
-                var power = maxSpeed
+            if (!useManualControl) {
+                if (abs(targetPosition - cachedPosition) > 10) {
+                    motor.targetPosition = targetPosition
+                    cachedPosition = targetPosition
 
-                motor.power = maxSpeed
-                motor.mode = DcMotor.RunMode.RUN_TO_POSITION
+                    motor.power = maxSpeed
+                    motor.mode = DcMotor.RunMode.RUN_TO_POSITION
+                }
             }
         }
-    }
-
-    fun manual(speed: Double) {
-        motor.power = speed
     }
 
     fun setRunMode(mode: DcMotor.RunMode) {

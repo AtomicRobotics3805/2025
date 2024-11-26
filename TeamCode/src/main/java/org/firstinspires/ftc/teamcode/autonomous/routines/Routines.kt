@@ -27,7 +27,7 @@ object Routines {
                 Claw.close
             ),
 
-            IntakeExtension.zero,
+            IntakeExtension.Zero(),
             Lights.DisplayColor(),
 
             DisplayRobot()
@@ -44,7 +44,7 @@ object Routines {
                 Claw.close
             ),
 
-            IntakeExtension.zero,
+            IntakeExtension.Zero(),
             Lights.DisplayColor(),
 
             DisplayRobot()

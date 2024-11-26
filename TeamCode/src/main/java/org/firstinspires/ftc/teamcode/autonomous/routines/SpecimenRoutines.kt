@@ -39,7 +39,10 @@ object SpecimenRoutines {
     val firstSpecToPushFirstSample: Command
         get() = ParallelCommandGroup(
             Constants.drive.followTrajectory(TrajectoryFactory.highChamber1ToBringLeftSampleToObservationZone),
-            Arm.toSpecimenPickupPos,
+            SequentialCommandGroup(
+                Delay(1.0),
+                Arm.toSpecimenPickupPos,
+            ),
             Lift.toSpecimenPickup,
             Claw.specimenOpen
         )
@@ -128,7 +131,7 @@ object SpecimenRoutines {
                     Arm.toIntakePos,
                     Lift.toIntake
                 ),
-                IntakeExtension.zero
+                IntakeExtension.Zero()
             )
         )
 
@@ -142,7 +145,7 @@ object SpecimenRoutines {
                     Arm.toIntakePos,
                     Lift.toIntake
                 ),
-                IntakeExtension.zero
+                IntakeExtension.Zero()
             )
         )
 

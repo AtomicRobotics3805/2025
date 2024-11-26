@@ -18,8 +18,8 @@ class Controls: Controls() {
             reverseTurn =  DriveConstants.REVERSE_TURN)
         dc()
 
-        Lift.ManualLiftControl(10, gamepad2.rightStick)
-        IntakeExtension.ManualExtensionControl(10, gamepad1.rightTrigger, gamepad1.leftTrigger)
+        Lift.ManualLiftControl(100, gamepad2.rightStick)
+        IntakeExtension.ManualExtensionControl(100, gamepad1.rightTrigger, gamepad1.leftTrigger)
 
         gamepad2.leftStick.button.pressedCommand = { Lift.Zero() }
 
@@ -45,7 +45,7 @@ class Controls: Controls() {
         gamepad1.rightBumper.releasedCommand = { Constants.drive.switchSpeed() }
 
         gamepad2.dpadUp.pressedCommand = { TeleOpRoutines.toHang }
-        gamepad2.dpadDown.pressedCommand = { Lift.toHang }
+        gamepad2.dpadDown.pressedCommand = { Lift.toHangDown }
 
 
         /*

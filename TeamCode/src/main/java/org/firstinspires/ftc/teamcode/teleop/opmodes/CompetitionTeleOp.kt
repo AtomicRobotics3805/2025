@@ -38,7 +38,7 @@ class CompetitionTeleOp: NextFTCOpMode(Arm, Claw, Intake, IntakeExtension, Intak
         IntakeSensor.DetectColor()()
         Lift.LiftControl()()
         IntakeExtension.IntakeExtensionControl()()
-        IntakeExtension.zero()
+        IntakeExtension.Zero()()
         IntakeSensor.IntakeStopOnIntaken()
         DisplayRobot()()
         TelemetryController.telemetry.addData("Lift position 1", Lift.motor1.currentPosition)

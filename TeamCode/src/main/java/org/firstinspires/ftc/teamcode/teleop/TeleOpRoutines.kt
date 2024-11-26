@@ -17,7 +17,10 @@ object TeleOpRoutines {
         get() = SequentialCommandGroup(
             IntakePivot.intakePivotTransfer,
             IntakeExtension.extensionOut,
-            IntakePivot.intakePivotDown,
+            SequentialCommandGroup(
+                IntakePivot.intakePivotUp,
+                IntakePivot.intakePivotDownMore
+            ),
             Intake.start,
             IntakeSensor.BlockUntilDetectedNoWatchdog(),
             Intake.stop
@@ -87,7 +90,7 @@ object TeleOpRoutines {
 
     val toHang: Command
         get() = SequentialCommandGroup(
-            Lift.toSpecimenScoreHigh,
+            Lift.toHangHigh,
             Arm.toSpecimenPreScorePos
         )
 

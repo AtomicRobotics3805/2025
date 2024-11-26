@@ -9,7 +9,6 @@ import com.rowanmcalpin.nextftc.command.utility.CustomCommand
 import com.rowanmcalpin.nextftc.controls.GamepadEx
 import com.rowanmcalpin.nextftc.hardware.MotorEx
 import com.rowanmcalpin.nextftc.subsystems.Subsystem
-import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.sign
 
@@ -29,17 +28,19 @@ object Lift: Subsystem {
     @JvmField
     var intakePos = -1.0 // Inches // TODO
     @JvmField
-    var specimenPickup = 1.75 // Inches // TODO
+    var specimenPickup = 1.78 // Inches // TODO
     @JvmField
-    var highPos = 24.0 // Inches // TODO
+    var highPos = 23.0 // Inches // TODO
     @JvmField
     var aLittleHighPos = 3.0 // Inches // TODO
     @JvmField
-    var specimenScoreHigh = 5.0 // Inches // TODO
+    var specimenScoreHigh = 4.6 // Inches // TODO
     @JvmField
     var specimenAutoScoreHigh = 4.6 // Inches // TODO
     @JvmField
-    var firstAutonSpecimenScoreHigh = 4.6 // Inches
+    var firstAutonSpecimenScoreHigh = 4.2 // Inches
+    @JvmField
+    var hangPos = 12.0 // Inches
 
     @JvmField
     var maxSpeed = 1.0
@@ -73,7 +74,16 @@ object Lift: Subsystem {
             LiftControl.zeroPower = true
         })
 
-    val toHang: Command
+    val toHangHigh: Command
+        get() = CustomCommand(getDone = { LiftControl.withinDistanceOfTarget() }, _start = {
+            LiftControl.zeroPower = false
+            LiftControl.targetPosition = (hangPos * countsPerInch).toInt()
+            LiftControl.commandRunning = true
+        }, _done = {
+            LiftControl.commandRunning = false
+        })
+
+    val toHangDown: Command
         get() = CustomCommand(getDone = { LiftControl.withinDistanceOfTarget() }, _start = {
             LiftControl.zeroPower = false
             LiftControl.targetPosition = (intakePos * countsPerInch).toInt()
@@ -86,7 +96,7 @@ object Lift: Subsystem {
         private var timer = ElapsedTime();
 
         override val _isDone: Boolean
-            get() = timer.seconds() > 0.75 || LiftControl.withinDistanceOfTarget()
+            get() = timer.seconds() > 1.0 || LiftControl.withinDistanceOfTarget()
 
         override fun onStart() {
             LiftControl.zeroPower = false
@@ -97,8 +107,11 @@ object Lift: Subsystem {
 
         override fun onEnd(interrupted: Boolean) {
             LiftControl.commandRunning = false
+            LiftControl.useManualControl = true
             motor1.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
             motor2.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
+            LiftControl.targetPosition = 0
+            LiftControl.useManualControl = false
         }
     }
 
@@ -171,7 +184,15 @@ object Lift: Subsystem {
         override fun onExecute() {
             if (timer.seconds() - lastTime >= period) {
                 if (abs(joyStick.y) > 0.25f) {
-                    LiftControl.manual((stepDistance * joyStick.y.toDouble()).toInt(), 1)
+                    LiftControl.useManualControl = true
+                    motor1.mode = DcMotor.RunMode.RUN_USING_ENCODER
+                    motor2.mode = DcMotor.RunMode.RUN_USING_ENCODER
+
+                    motor1.power = -joyStick.y.toDouble()
+                    motor2.power = -joyStick.y.toDouble()
+                } else {
+                    LiftControl.targetPosition = motor1.currentPosition
+                    LiftControl.useManualControl = false
                 }
             }
         }
@@ -192,9 +213,7 @@ object Lift: Subsystem {
                 return abs(targetPosition - motor1.currentPosition) <= 100
             }
 
-            fun manual(stepDistance: Int, direction: Int = 1) {
-                targetPosition += (stepDistance * if(direction!=0) direction.sign else 1)
-            }
+            var useManualControl = false
         }
 
         override fun onStart() {
@@ -202,23 +221,25 @@ object Lift: Subsystem {
         }
 
         override fun onExecute() {
-            if (abs(targetPosition-cachedPosition) > 10) { // If we need to move the motor to achieve our target position, IE if our target position is different from our cached position
-                motor1.targetPosition = targetPosition
-                motor2.targetPosition = targetPosition
+            if(!useManualControl) {
+                if (abs(targetPosition - cachedPosition) > 10) { // If we need to move the motor to achieve our target position, IE if our target position is different from our cached position
+                    motor1.targetPosition = targetPosition
+                    motor2.targetPosition = targetPosition
 
 
-                cachedPosition = targetPosition
+                    cachedPosition = targetPosition
 
-                motor1.power = maxSpeed
-                motor2.power = maxSpeed
-                motor1.mode = DcMotor.RunMode.RUN_TO_POSITION
-                motor2.mode = DcMotor.RunMode.RUN_TO_POSITION
-            }
+                    motor1.power = maxSpeed
+                    motor2.power = maxSpeed
+                    motor1.mode = DcMotor.RunMode.RUN_TO_POSITION
+                    motor2.mode = DcMotor.RunMode.RUN_TO_POSITION
+                }
 
-            // De-power if the lift is within 20 ticks of 0
-            if (zeroPower) {
-                motor1.power = 0.0
-                motor2.power = 0.0
+                // De-power if the lift is within 20 ticks of 0
+                if (zeroPower) {
+                    motor1.power = 0.0
+                    motor2.power = 0.0
+                }
             }
         }
     }

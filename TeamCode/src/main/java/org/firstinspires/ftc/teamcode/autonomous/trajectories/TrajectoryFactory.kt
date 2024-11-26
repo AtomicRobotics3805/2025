@@ -24,7 +24,7 @@ object TrajectoryFactory: TrajectoryFactory() {
 
     // Intake positions
     val rightSample: Pose2d = Pose2d(49.0, 43.0, 270.rad)
-    val centerSample: Pose2d = Pose2d(58.5, 44.5, 270.rad)
+    val centerSample: Pose2d = Pose2d(58.5, 50.5, 270.rad)
     val leftSample: Pose2d = Pose2d(60.25, 36.0, 320.rad)
     val leftSamplePickup: Pose2d = Pose2d(60.25, 34.0, 315.rad)
 
@@ -53,9 +53,9 @@ object TrajectoryFactory: TrajectoryFactory() {
     val submersibleYPos = 22.0
     val submersibleYApproach = 35.0
     val highChamber1 = Pose2d(-10.0, submersibleYPos,  90.rad)
-    val highChamber2 = Pose2d(-8.0, submersibleYPos, 90.rad)
-    val highChamber3 = Pose2d(-6.0, submersibleYPos, 90.rad)
-    val highChamber4 = Pose2d(-4.0, submersibleYPos, 90.rad)
+    val highChamber2 = Pose2d(-7.0, submersibleYPos, 90.rad)
+    val highChamber3 = Pose2d(0.0, submersibleYPos, 90.rad)
+    val highChamber4 = Pose2d(2.0, submersibleYPos, 90.rad)
 
     val observationZoneYPos = 50.0
     val transitPos1 = Pose2d(-36.0, 36.0, 270.rad)
@@ -67,7 +67,7 @@ object TrajectoryFactory: TrajectoryFactory() {
     val observationZoneMiddle = Pose2d(-61.0, observationZoneYPos, 270.rad)
 
     val prepatorySpecimenPickupPos = Pose2d(-36.0, 50.0, 270.rad)
-    val specimenPickupPosition = Pose2d(-36.0, 58.0, 270.rad)
+    val specimenPickupPosition = Pose2d(-36.0, 60.0, 270.rad)
 
     lateinit var rightStartToHighChamber1: ParallelTrajectory
     lateinit var highChamber1ToBringLeftSampleToObservationZone: ParallelTrajectory
@@ -111,9 +111,9 @@ object TrajectoryFactory: TrajectoryFactory() {
             .splineToSplineHeading(basketHigh, 45.rad).build()
 
         highBasketToCenterSample = Constants.drive.trajectoryBuilder(basketHigh)
-            .lineToSplineHeading(centerSample).build()
+            .lineToLinearHeading(centerSample).build()
         pickupCenterSample = Constants.drive.trajectoryBuilder(centerSample)
-            .forward(10.0, TranslationalVelocityConstraint(38.0)).build()
+            .forward(15.0, TranslationalVelocityConstraint(20.0)).build()
         centerSampleToHighBasket = Constants.drive.trajectoryBuilder(pickupCenterSample.end(), 90.rad)
             .lineToSplineHeading(basketHigh).build()
 
@@ -131,6 +131,7 @@ object TrajectoryFactory: TrajectoryFactory() {
             .lineTo(highChamber1.vec()).build()
 
         highChamber1ToBringLeftSampleToObservationZone = Constants.drive.trajectoryBuilder(highChamber1, 90.rad)
+            .lineTo(Vector2d(highChamber1.x, highChamber1.y + 4.0))
             .splineToSplineHeading(transitPos1, 270.rad)
             .splineToSplineHeading(transitPos2, 270.rad)
             .splineToConstantHeading(leftColoredSample.vec(), 90.rad, TranslationalVelocityConstraint(20.0))

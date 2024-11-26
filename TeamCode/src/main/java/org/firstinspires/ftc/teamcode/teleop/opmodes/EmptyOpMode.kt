@@ -38,7 +38,7 @@ class EmptyOpMode: NextFTCOpMode(Arm, Claw, Intake, IntakeExtension, IntakePivot
         IntakeSensor.DetectColor()()
         Lift.LiftControl()()
         IntakeExtension.IntakeExtensionControl()()
-        IntakeExtension.zero()
+        IntakeExtension.Zero()()
         IntakeSensor.IntakeStopOnIntaken()
     }
 

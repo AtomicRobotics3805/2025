@@ -30,6 +30,7 @@ class TwoSampleAscentPark: NextFTCOpMode(Arm, Claw, Intake, IntakeExtension, Int
         { TrajectoryFactory.startPosLeft }
 
     override fun onInit() {
+
         Routines.autonomousWithSampleInitializationRoutine()
         telemetryData.add(Pair("Lift position", Lift.motor1.currentPosition))
         telemetryData.add(Pair("Lift target", Lift.LiftControl.targetPosition))

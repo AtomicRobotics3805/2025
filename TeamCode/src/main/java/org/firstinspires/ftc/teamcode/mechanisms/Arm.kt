@@ -23,9 +23,9 @@ object Arm: Subsystem {
     @JvmField
     var specimenPickupPos = 0.97
     @JvmField
-    var specimenPreScorePose = 0.69
+    var specimenPreScorePose = 0.7
     @JvmField
-    var specimenScorePos = 0.69
+    var specimenScorePos = 0.7
 
 
     val toIntakePos: Command

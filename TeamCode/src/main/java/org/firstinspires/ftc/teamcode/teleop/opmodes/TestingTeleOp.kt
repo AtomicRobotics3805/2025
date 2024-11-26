@@ -40,7 +40,7 @@ class TestingTeleOp: NextFTCOpMode(Arm, Claw, Intake, IntakeExtension, IntakePiv
         IntakeSensor.DetectColor()()
         Lift.LiftControl()()
         IntakeExtension.IntakeExtensionControl()()
-        IntakeExtension.zero()
+        IntakeExtension.Zero()()
         IntakeSensor.IntakeStopOnIntaken()
         DisplayRobot()()
 //        TelemetryController.telemetry.addData("Lift position 1", Lift.motor1.currentPosition)
