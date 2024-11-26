@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.autonomous.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.rowanmcalpin.nextftc.Constants
 import com.rowanmcalpin.nextftc.driving.drivers.MecanumDrive
 import com.rowanmcalpin.nextftc.driving.localizers.TwoWheelOdometryLocalizer
 import com.rowanmcalpin.nextftc.opmodes.NextFTCOpMode
 import org.firstinspires.ftc.teamcode.autonomous.routines.Routines
+import org.firstinspires.ftc.teamcode.autonomous.routines.SampleRoutines
 import org.firstinspires.ftc.teamcode.autonomous.trajectories.TrajectoryFactory
 import org.firstinspires.ftc.teamcode.drive.DriveConstants
 import org.firstinspires.ftc.teamcode.localization.OdometryConstants
@@ -19,6 +21,7 @@ import org.firstinspires.ftc.teamcode.mechanisms.Lift
 import org.firstinspires.ftc.teamcode.mechanisms.Lights
 
 @Autonomous(name = "Single Sample Ascent Park")
+@Disabled
 class SingleSampleAscentPark: NextFTCOpMode(Arm, Claw, Intake, IntakeExtension, IntakePivot, IntakeSensor, Lift, Lights) {
     override val color = Constants.Color.BLUE // Doesn't actually matter, since the field is rotationally symmetrical
     override val trajectoryFactory = TrajectoryFactory
@@ -70,6 +73,6 @@ class SingleSampleAscentPark: NextFTCOpMode(Arm, Claw, Intake, IntakeExtension, 
     }
 
     override fun onStartButtonPressed() {
-        Routines.singleSampleAscentPark()
+        SampleRoutines.singleSampleAscentPark()
     }
 }

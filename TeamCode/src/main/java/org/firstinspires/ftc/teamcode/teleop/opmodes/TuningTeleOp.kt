@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleop.opmodes
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.rowanmcalpin.nextftc.driving.drivers.MecanumDrive
 import com.rowanmcalpin.nextftc.driving.localizers.TwoWheelOdometryLocalizer
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.drive.DriveConstants
 import org.firstinspires.ftc.teamcode.localization.OdometryConstants
 
 @TeleOp(name="Tuning TeleOp")
+@Disabled
 class TuningTeleOp: NextFTCOpMode() {
     override val drive = MecanumDrive(DriveConstants, TwoWheelOdometryLocalizer(OdometryConstants), { Pose2d(0.0, 0.0, 0.0) })
 

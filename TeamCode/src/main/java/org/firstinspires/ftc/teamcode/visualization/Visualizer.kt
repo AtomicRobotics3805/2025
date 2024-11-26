@@ -7,10 +7,12 @@ import com.rowanmcalpin.nextftc.driving.drivers.MecanumDrive
 import com.rowanmcalpin.nextftc.driving.localizers.TwoWheelOdometryLocalizer
 import com.rowanmcalpin.nextftc.visualization.MeepMeepRobot
 import com.rowanmcalpin.nextftc.visualization.MeepMeepVisualizer
+import org.firstinspires.ftc.teamcode.autonomous.routines.SampleRoutines
 import org.firstinspires.ftc.teamcode.autonomous.trajectories.TrajectoryFactory as tf
 import org.firstinspires.ftc.teamcode.drive.DriveConstants
 import org.firstinspires.ftc.teamcode.localization.OdometryConstants
 fun main() {
+
     MeepMeepVisualizer.addRobot(
         MeepMeepRobot(
             MecanumDrive(
@@ -20,14 +22,21 @@ fun main() {
             14.0,
             18.0,
             {
+
                 SequentialCommandGroup(
                     Constants.drive.followTrajectory(tf.leftStartToHighBasket),
                     Constants.drive.followTrajectory(tf.highBasketToRightSample),
+                    Constants.drive.followTrajectory(tf.pickupRightSample),
                     Constants.drive.followTrajectory(tf.rightSampleToHighBasket),
                     Constants.drive.followTrajectory(tf.highBasketToCenterSample),
+                    Constants.drive.followTrajectory(tf.pickupCenterSample),
                     Constants.drive.followTrajectory(tf.centerSampleToHighBasket),
-                    Constants.drive.followTrajectory(tf.highBasketToAscentPark)
+                    Constants.drive.followTrajectory(tf.highBasketToLeftSample),
+                    Constants.drive.followTrajectory(tf.leftSampleToLeftSamplePickup),
+                    Constants.drive.followTrajectory(tf.leftSampleToHighBasket)
                 )
+
+
             },
             Constants.Color.BLUE
         )

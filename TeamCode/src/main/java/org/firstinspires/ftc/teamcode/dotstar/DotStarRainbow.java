@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.dotstar;
 
 import android.graphics.Color;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -21,6 +22,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * @version 2.0.0
  */
 @TeleOp(name = "DotStar Rainbow", group = "Examples")
+@Disabled
 public class DotStarRainbow extends OpMode {
 
     /* LEDs: Use this line if you drive the LEDs using an I2C/SPI bridge. */

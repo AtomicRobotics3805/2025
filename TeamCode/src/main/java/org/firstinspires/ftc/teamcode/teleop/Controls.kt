@@ -5,6 +5,7 @@ import com.rowanmcalpin.nextftc.controls.Controls
 import com.rowanmcalpin.nextftc.driving.DriverControlled
 import org.firstinspires.ftc.teamcode.drive.DriveConstants
 import org.firstinspires.ftc.teamcode.mechanisms.Arm
+import org.firstinspires.ftc.teamcode.mechanisms.Claw
 import org.firstinspires.ftc.teamcode.mechanisms.Intake
 import org.firstinspires.ftc.teamcode.mechanisms.IntakeExtension
 import org.firstinspires.ftc.teamcode.mechanisms.Lift
@@ -17,19 +18,24 @@ class Controls: Controls() {
             reverseTurn =  DriveConstants.REVERSE_TURN)
         dc()
 
+        Lift.ManualLiftControl(100, gamepad2.rightStick)
+        IntakeExtension.ManualExtensionControl(100, gamepad1.rightTrigger, gamepad1.leftTrigger)
+
         gamepad2.leftStick.button.pressedCommand = { Lift.Zero() }
 
         gamepad1.x.pressedCommand = { dc.resetRotation }
 
         gamepad1.a.pressedCommand = { TeleOpRoutines.outToIntake }
-        gamepad1.rightTrigger.pressedCommand = { Intake.start }
-        gamepad1.leftTrigger.pressedCommand = { Intake.reverse }
+        gamepad1.dpadRight.pressedCommand = { Intake.start }
+        gamepad1.dpadLeft.pressedCommand = { Intake.reverse }
 
         gamepad1.leftBumper.pressedCommand = { TeleOpRoutines.slightlyOutToIntake }
 
         gamepad1.dpadDown.pressedCommand = { Arm.toAscentOnePos }
 
-        gamepad2.a.pressedCommand = { TeleOpRoutines.outToIntake }
+        gamepad1.b.pressedCommand = { Claw.open }
+
+        gamepad2.a.pressedCommand = { Claw.open }
         gamepad2.b.pressedCommand = { TeleOpRoutines.inToTransfer }
         gamepad2.rightTrigger.pressedCommand = { TeleOpRoutines.scoreToRepeat }
         gamepad2.y.toggleCommands = listOf({ TeleOpRoutines.toSpecimenPickup }, { TeleOpRoutines.specimenPickupToScore })
@@ -37,6 +43,10 @@ class Controls: Controls() {
 
         gamepad1.rightBumper.pressedCommand = { Constants.drive.switchSpeed() }
         gamepad1.rightBumper.releasedCommand = { Constants.drive.switchSpeed() }
+
+        gamepad2.dpadUp.pressedCommand = { TeleOpRoutines.toHang }
+        gamepad2.dpadDown.pressedCommand = { Lift.toHangDown }
+
 
         /*
         gamepad1.a.pressedCommand = { TeleOpRoutines.outToIntake }

@@ -34,7 +34,7 @@ object OdometryConstants: TwoWheelOdometryConstants {
 
     // Tuning variables
     @JvmField
-    var _X_MULTIPLIER = 0.9826 // FRONT AND BACK
+    var _X_MULTIPLIER = 1.1117// FRONT AND BACK
     @JvmField
     var _Y_MULTIPLIER = 1.0119 // SIDE TO SIDE
 

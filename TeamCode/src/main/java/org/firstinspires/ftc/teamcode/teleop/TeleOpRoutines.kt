@@ -10,25 +10,34 @@ import org.firstinspires.ftc.teamcode.mechanisms.Intake
 import org.firstinspires.ftc.teamcode.mechanisms.IntakeExtension
 import org.firstinspires.ftc.teamcode.mechanisms.IntakePivot
 import org.firstinspires.ftc.teamcode.mechanisms.Lift
+import org.firstinspires.ftc.teamcode.mechanisms.IntakeSensor
 
 object TeleOpRoutines {
     val outToIntake: Command
         get() = SequentialCommandGroup(
-            IntakePivot.intakePivotUp,
+            IntakePivot.intakePivotTransfer,
             IntakeExtension.extensionOut,
-            IntakePivot.intakePivotDown,
-            Intake.start
+            SequentialCommandGroup(
+                IntakePivot.intakePivotUp,
+                IntakePivot.intakePivotDownMore
+            ),
+            Intake.start,
+            IntakeSensor.BlockUntilDetectedNoWatchdog(),
+            Intake.stop
         )
 
     val slightlyOutToIntake: Command
         get() = SequentialCommandGroup(
+            IntakePivot.intakePivotTransfer,
             IntakeExtension.extensionSlightlyOut,
 
             SequentialCommandGroup(
                 IntakePivot.intakePivotUp,
                 IntakePivot.intakePivotDownMore
             ),
-            Intake.start
+            Intake.start,
+            IntakeSensor.BlockUntilDetectedNoWatchdog(),
+            Intake.stop
         )
 
     val inToTransfer: Command
@@ -51,7 +60,14 @@ object TeleOpRoutines {
 
     val liftUp: Command
         get() = ParallelCommandGroup(
-            Arm.toScorePos,
+            SequentialCommandGroup(
+                IntakeExtension.extensionSlightlyOut,
+                IntakeExtension.extensionIn
+            ),
+            SequentialCommandGroup(
+                Delay(1.5),
+                Arm.toScorePos
+            ),
             Lift.toHigh,
             IntakePivot.intakePivotUp
         )
@@ -72,6 +88,12 @@ object TeleOpRoutines {
             Arm.toSpecimenPreScorePos
         )
 
+    val toHang: Command
+        get() = SequentialCommandGroup(
+            Lift.toHangHigh,
+            Arm.toSpecimenPreScorePos
+        )
+
     val toSpecimenPickup: Command
         get() = SequentialCommandGroup(
             ParallelCommandGroup(
@@ -81,7 +103,7 @@ object TeleOpRoutines {
                 ),
                 SequentialCommandGroup(
                     Delay(0.8),
-                    Lift.toIntake
+                    Lift.toSpecimenPickup
                 ),
                 SequentialCommandGroup(
                     Arm.toSpecimenScorePos,

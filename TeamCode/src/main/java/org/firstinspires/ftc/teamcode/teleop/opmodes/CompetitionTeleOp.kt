@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.teleop.opmodes
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
-import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.rowanmcalpin.nextftc.Constants
 import com.rowanmcalpin.nextftc.TelemetryController
@@ -24,9 +23,8 @@ import org.firstinspires.ftc.teamcode.mechanisms.IntakeSensor
 import org.firstinspires.ftc.teamcode.mechanisms.Lift
 import org.firstinspires.ftc.teamcode.mechanisms.Lights
 
-@TeleOp(name="Testing TeleOp")
-@Disabled
-class TestingTeleOp: NextFTCOpMode(Arm, Claw, Intake, IntakeExtension, IntakePivot, Lift, Lights, IntakeSensor) {
+@TeleOp(name="Competition TeleOp")
+class CompetitionTeleOp: NextFTCOpMode(Arm, Claw, Intake, IntakeExtension, IntakePivot, Lift, Lights, IntakeSensor) {
     override val controls: Controls = org.firstinspires.ftc.teamcode.teleop.Controls()
     override val drive = MecanumDrive(DriveConstants, TwoWheelOdometryLocalizer(OdometryConstants), { Pose2d(0.0, 0.0, 90.rad) })
 
@@ -43,23 +41,23 @@ class TestingTeleOp: NextFTCOpMode(Arm, Claw, Intake, IntakeExtension, IntakePiv
         IntakeExtension.Zero()()
         IntakeSensor.IntakeStopOnIntaken()
         DisplayRobot()()
-//        TelemetryController.telemetry.addData("Lift position 1", Lift.motor1.currentPosition)
-//        TelemetryController.telemetry.addData("Lift position 2", Lift.motor1.currentPosition)
-//        TelemetryController.telemetry.addData("Lift power 1", Lift.motor1.power)
-//        TelemetryController.telemetry.addData("Lift power 2", Lift.motor2.power)
-//        TelemetryController.telemetry.addData("Lift target", Lift.LiftControl.targetPosition)
-//        TelemetryController.telemetry.addData("Intake extension position", IntakeExtension.motor.currentPosition)
-//        TelemetryController.telemetry.addData("Intake extension target", IntakeExtension.IntakeExtensionControl.targetPosition)
+        TelemetryController.telemetry.addData("Lift position 1", Lift.motor1.currentPosition)
+        TelemetryController.telemetry.addData("Lift position 2", Lift.motor1.currentPosition)
+        TelemetryController.telemetry.addData("Lift power 1", Lift.motor1.power)
+        TelemetryController.telemetry.addData("Lift power 2", Lift.motor2.power)
+        TelemetryController.telemetry.addData("Lift target", Lift.LiftControl.targetPosition)
+        TelemetryController.telemetry.addData("Intake extension position", IntakeExtension.motor.currentPosition)
+        TelemetryController.telemetry.addData("Intake extension target", IntakeExtension.IntakeExtensionControl.targetPosition)
     }
 
     override fun onUpdate() {
-//        TelemetryController.telemetry.addData("Lift position 1", Lift.motor1.currentPosition)
-//        TelemetryController.telemetry.addData("Lift position 2", Lift.motor1.currentPosition)
-//        TelemetryController.telemetry.addData("Lift power 1", Lift.motor1.power)
-//        TelemetryController.telemetry.addData("Lift power 2", Lift.motor2.power)
-//        TelemetryController.telemetry.addData("Lift target", Lift.LiftControl.targetPosition)
-//        TelemetryController.telemetry.addData("Intake extension position", IntakeExtension.motor.currentPosition)
-//        TelemetryController.telemetry.addData("Intake extension target", IntakeExtension.IntakeExtensionControl.targetPosition)
+        TelemetryController.telemetry.addData("Lift position 1", Lift.motor1.currentPosition)
+        TelemetryController.telemetry.addData("Lift position 2", Lift.motor1.currentPosition)
+        TelemetryController.telemetry.addData("Lift power 1", Lift.motor1.power)
+        TelemetryController.telemetry.addData("Lift power 2", Lift.motor2.power)
+        TelemetryController.telemetry.addData("Lift target", Lift.LiftControl.targetPosition)
+        TelemetryController.telemetry.addData("Intake extension position", IntakeExtension.motor.currentPosition)
+        TelemetryController.telemetry.addData("Intake extension target", IntakeExtension.IntakeExtensionControl.targetPosition)
     }
 
     override fun onStop() {

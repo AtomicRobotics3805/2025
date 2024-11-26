@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.dotstar;
 
 import android.graphics.Color;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
@@ -25,6 +26,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * @version 2.0.0
  */
 @TeleOp()
+@Disabled
 public class DotStarBatteryMeterSPINew extends OpMode {
 
 

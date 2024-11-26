@@ -15,17 +15,17 @@ object Arm: Subsystem {
     val armServo = ServoEx(name)
 
     @JvmField
-    var intakePos = 0.027
+    var intakePos = 0.05
     @JvmField
-    var scorePos = 0.647
+    var scorePos = 0.69
     @JvmField
-    var ascentOnePos = 0.6
+    var ascentOnePos = 0.69
     @JvmField
-    var specimenPickupPos = 0.83
+    var specimenPickupPos = 0.97
     @JvmField
     var specimenPreScorePose = 0.7
     @JvmField
-    var specimenScorePos = 0.908
+    var specimenScorePos = 0.7
 
 
     val toIntakePos: Command
@@ -35,7 +35,7 @@ object Arm: Subsystem {
     val toScorePos: Command
         get() = MoveServo(armServo, scorePos, 1.0, listOf(this@Arm))
     val toSpecimenPickupPos: Command
-        get() = MoveServo(armServo, specimenPickupPos, 1.0, listOf(this@Arm))
+        get() = MoveServo(armServo, specimenPickupPos, 0.0, listOf(this@Arm))
     val toSpecimenPreScorePos: Command
         get() = MoveServo(armServo, specimenPreScorePose, 1.0, listOf(this@Arm))
     val toSpecimenScorePos: Command

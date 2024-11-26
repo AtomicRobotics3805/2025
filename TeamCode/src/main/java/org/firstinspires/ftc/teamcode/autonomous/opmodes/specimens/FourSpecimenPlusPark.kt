@@ -1,13 +1,13 @@
-package org.firstinspires.ftc.teamcode.autonomous.opmodes
+//package org.firstinspires.ftc.teamcode.autonomous.opmodes.specimens
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
-import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.rowanmcalpin.nextftc.Constants
 import com.rowanmcalpin.nextftc.driving.drivers.MecanumDrive
 import com.rowanmcalpin.nextftc.driving.localizers.TwoWheelOdometryLocalizer
 import com.rowanmcalpin.nextftc.opmodes.NextFTCOpMode
+import com.rowanmcalpin.nextftc.subsystems.DisplayRobot
 import org.firstinspires.ftc.teamcode.autonomous.routines.Routines
-import org.firstinspires.ftc.teamcode.autonomous.routines.SampleRoutines
+import org.firstinspires.ftc.teamcode.autonomous.routines.SpecimenRoutines
 import org.firstinspires.ftc.teamcode.autonomous.trajectories.TrajectoryFactory
 import org.firstinspires.ftc.teamcode.drive.DriveConstants
 import org.firstinspires.ftc.teamcode.localization.OdometryConstants
@@ -20,21 +20,24 @@ import org.firstinspires.ftc.teamcode.mechanisms.IntakeSensor
 import org.firstinspires.ftc.teamcode.mechanisms.Lift
 import org.firstinspires.ftc.teamcode.mechanisms.Lights
 
-@Autonomous(name = "Single Specimen Zone Park")
-@Disabled
-class SingleSpecimenZonePark: NextFTCOpMode(Arm, Claw, Intake, IntakeExtension, IntakePivot, IntakeSensor, Lift, Lights) {
-    override val color = Constants.Color.BLUE // Doesn't actually matter, since the field is rotationally symmetrical
+@Autonomous(name = "Four Specimen Plus Park", group = "specimens")
+class FourSpecimenPlusPark: NextFTCOpMode(Arm, Claw, Intake, IntakeExtension, IntakePivot, IntakeSensor, Lift, Lights) {
+    override val color = Constants.Color.UNKNOWN
+
     override val trajectoryFactory = TrajectoryFactory
-    override val drive = MecanumDrive(DriveConstants,
-        TwoWheelOdometryLocalizer(OdometryConstants))
+
+    override val drive = MecanumDrive(
+        DriveConstants,
+        TwoWheelOdometryLocalizer(OdometryConstants)
+    )
     { TrajectoryFactory.startPosRight }
 
     override fun onInit() {
-        Routines.autonomousWithSampleInitializationRoutine()
+        Routines.autonomousWithSpecimenInitializationRoutine()
+        DisplayRobot()
     }
 
     override fun onStartButtonPressed() {
-        SampleRoutines.singleSampleAscentPark()
-
+        SpecimenRoutines.fourSpecimenPlusPark()
     }
 }

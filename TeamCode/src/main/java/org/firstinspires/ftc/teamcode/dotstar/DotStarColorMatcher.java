@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.dotstar;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -15,6 +16,7 @@ import com.qualcomm.robotcore.util.Range;
  * @version 2.0.0
  */
 @TeleOp(name = "DotStar Color Matcher", group = "Examples")
+@Disabled
 public class DotStarColorMatcher extends OpMode {
 
     // Hardware variables.

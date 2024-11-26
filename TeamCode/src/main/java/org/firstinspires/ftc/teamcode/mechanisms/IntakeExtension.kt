@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.mechanisms
 import com.acmerobotics.dashboard.config.Config
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorSimple
+import com.qualcomm.robotcore.util.ElapsedTime
+import com.qualcomm.robotcore.util.Range
 import com.rowanmcalpin.nextftc.command.Command
 import com.rowanmcalpin.nextftc.command.groups.SequentialCommandGroup
 import com.rowanmcalpin.nextftc.command.utility.CustomCommand
@@ -12,6 +14,7 @@ import com.rowanmcalpin.nextftc.subsystems.MotorToPosition
 import com.rowanmcalpin.nextftc.subsystems.Subsystem
 import org.firstinspires.ftc.teamcode.ToPositionCommand
 import kotlin.math.abs
+import kotlin.math.sign
 
 @Config
 object IntakeExtension: Subsystem {
@@ -28,9 +31,11 @@ object IntakeExtension: Subsystem {
     @JvmField
     var inPos = 69
     @JvmField
-    var outPos = 1200 // TODO
+    var outPos = 1000 // TODO
     @JvmField
     var slightlyOutPos = 300 // TODO
+    @JvmField
+    var middlePos = 600
 
     val motor = MotorEx(name, MotorEx.MotorType.GOBILDA_YELLOWJACKET, motorRatio, motorDirection)
 
@@ -59,6 +64,13 @@ object IntakeExtension: Subsystem {
         }, _done = {
             IntakeExtensionControl.commandRunning = false
         })
+    val extensionMiddle: Command
+        get() = CustomCommand(getDone = { IntakeExtensionControl.withinDistanceOfTarget() }, _start = {
+            IntakeExtensionControl.targetPosition = middlePos
+            IntakeExtensionControl.commandRunning = true
+        }, _done = {
+            IntakeExtensionControl.commandRunning = false
+        })
     val extensionOut: Command
         get() = CustomCommand(getDone = { IntakeExtensionControl.withinDistanceOfTarget() }, _start = {
             IntakeExtensionControl.targetPosition = outPos
@@ -79,16 +91,68 @@ object IntakeExtension: Subsystem {
             setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER)
         })
 
+    class Zero: Command() {
+        private var timer = ElapsedTime();
+
+        override val _isDone: Boolean
+            get() = timer.seconds() > 1.0 || Lift.LiftControl.withinDistanceOfTarget()
+
+        override fun onStart() {
+            IntakeExtensionControl.targetPosition = -60
+            IntakeExtensionControl.commandRunning = true
+            timer.reset()
+        }
+
+        override fun onEnd(interrupted: Boolean) {
+            IntakeExtensionControl.commandRunning = false
+            IntakeExtensionControl.useManualControl = true
+            motor.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
+            IntakeExtensionControl.targetPosition = 0
+            IntakeExtensionControl.useManualControl = false
+        }
+    }
+
+
+    public class ManualExtensionControl(val stepDistance: Int, val outTrigger: GamepadEx.Trigger, val inTrigger: GamepadEx.Trigger, val period: Double = 0.2): Command() {
+        val timer = ElapsedTime()
+        var lastTime: Double = -period
+
+        override val _isDone: Boolean
+            get() = false
+
+        override fun onStart() {
+            timer.reset()
+        }
+
+        override fun onExecute() {
+            if (timer.seconds() - lastTime >= period) {
+                if (abs(outTrigger.amount) > 0.25f || abs(inTrigger.amount) > 0.25f) {
+                    IntakeExtensionControl.useManualControl = true
+                    motor.mode = DcMotor.RunMode.RUN_USING_ENCODER
+
+                    motor.power = Range.clip((outTrigger.amount + -inTrigger.amount).toDouble(), -1.0, 1.0)
+                } else {
+                    IntakeExtensionControl.targetPosition = motor.currentPosition
+                    IntakeExtensionControl.useManualControl = false
+                }
+            }
+        }
+    }
+
+
     public class IntakeExtensionControl: Command() {
         override val _isDone = false
+        private var cachedPosition = 0
 
         companion object {
-            var targetPosition = 0;
-            var commandRunning = false;
+            var targetPosition = 0
+            var commandRunning = false
 
             fun withinDistanceOfTarget(): Boolean {
                 return abs(targetPosition - motor.currentPosition) <= 20
             }
+
+            var useManualControl = false
         }
 
         override fun onStart() {
@@ -96,28 +160,16 @@ object IntakeExtension: Subsystem {
         }
 
         override fun onExecute() {
-            motor.targetPosition = targetPosition
-            var power = maxSpeed
+            if (!useManualControl) {
+                if (abs(targetPosition - cachedPosition) > 10) {
+                    motor.targetPosition = targetPosition
+                    cachedPosition = targetPosition
 
-            if (abs(motor.currentPosition) <= 20 && abs(targetPosition) <= 20 && !commandRunning) {
-                power = 0.0
+                    motor.power = maxSpeed
+                    motor.mode = DcMotor.RunMode.RUN_TO_POSITION
+                }
             }
-//            val error = targetPosition - motorGroup.currentPosition
-//            val direction = sign(error.toDouble())
-//            var power = 0.008 * abs(error) * maxSpeed * direction - 0.03
-//            // Depower if the lift is within 20 ticks of 0
-//            if (abs(0 - motorGroup.currentPosition) <= 20 && abs(0 - targetPosition) <= 20 && !commandRunning) {
-//                power = 0.0
-//            }
-
-//            motorGroup.power = Range.clip(power, -min(maxSpeed, 1.0), min(maxSpeed, 1.0))
-            motor.power = power
-            motor.mode = DcMotor.RunMode.RUN_TO_POSITION
         }
-    }
-
-    fun manual(speed: Double) {
-        motor.power = speed
     }
 
     fun setRunMode(mode: DcMotor.RunMode) {

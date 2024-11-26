@@ -4,6 +4,7 @@ import android.graphics.Color
 import com.qualcomm.hardware.rev.RevColorSensorV3
 import com.qualcomm.robotcore.util.ElapsedTime
 import com.rowanmcalpin.nextftc.Constants
+import com.rowanmcalpin.nextftc.TelemetryController
 import com.rowanmcalpin.nextftc.command.Command
 import com.rowanmcalpin.nextftc.subsystems.Subsystem
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
@@ -51,13 +52,23 @@ object IntakeSensor: Subsystem {
                 }
                 lastTimestamp = timer.seconds()
             }
-            TestingTeleOp.telemetryData.add(Pair("Detected color", hsv.contentToString()))
+
         }
     }
 
-    public class BlockUntilDetected: Command() {
+    public class IntakeStopOnIntaken(): Command() {
+        override val _isDone: Boolean
+            get() = false
+
+        override fun onExecute() {
+            if (sensor.getDistance(DistanceUnit.CM) < 2) {
+                Intake.stop()
+            }
+        }
+    }
+
+    public class BlockUntilDetected(val watchdogThreshold: Double = 2.0): Command() {
         private val watchdog = ElapsedTime()
-        private val watchdogThreshold = 2.0
         override val _isDone
             get() = sensor.getDistance(DistanceUnit.CM) < 2 || watchdog.seconds() > watchdogThreshold
 
@@ -66,6 +77,10 @@ object IntakeSensor: Subsystem {
         }
     }
 
+    public class BlockUntilDetectedNoWatchdog(): Command() {
+        override val _isDone
+            get() = sensor.getDistance(DistanceUnit.CM) < 2
+      
     public class DetectSampleColor: Command() {
         override var _isDone = false
 

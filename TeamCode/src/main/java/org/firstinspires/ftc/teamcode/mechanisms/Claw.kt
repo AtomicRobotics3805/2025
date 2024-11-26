@@ -23,7 +23,7 @@ object Claw: Subsystem {
     val open: Command
         get() = MoveServo(clawServo, openPos, 1.0, listOf(this@Claw))
     val close: Command
-        get() = MoveServo(clawServo, closedPos, 1.0, listOf(this@Claw))
+        get() = MoveServo(clawServo, closedPos, 0.7, listOf(this@Claw))
     val specimenOpen: Command
         get() = MoveServo(clawServo, specimenOpenPos, 1.0, listOf(this@Claw))
 
